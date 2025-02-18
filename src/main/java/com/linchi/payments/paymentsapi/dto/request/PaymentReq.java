@@ -1,8 +1,11 @@
 package com.linchi.payments.paymentsapi.dto.request;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
 import com.linchi.payments.paymentsapi.entitys.enums.CurrencyEnum;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,9 +18,19 @@ import lombok.NoArgsConstructor;
 @Builder
 public class PaymentReq {
 
+    @Positive(message = "el valor no puede ser negativo")
+    @NotNull(message = "comercio es obligatrorio")
     private int commerceId;
+
+    @Positive(message = "el valor no puede ser negativo")
+    @NotNull(message = "id de intencion de pago es obligatrorio")
     private int payIntentionId;
+
+    @DecimalMin(value = "0.1", message = "el importe debe ser mayor a 0")
+    @NotNull(message = "monto es obligatrorio")
     private Double amount;
+
+    @NotNull(message = "tipo de moneda es obligatrorio")
     private CurrencyEnum currency;
 
 
