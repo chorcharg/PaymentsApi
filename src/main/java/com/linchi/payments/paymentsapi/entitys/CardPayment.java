@@ -1,10 +1,16 @@
 package com.linchi.payments.paymentsapi.entitys;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class CardPayment {
 
     @Id
@@ -16,8 +22,9 @@ public class CardPayment {
             @JoinColumn(name = "paymentId_commerceId", referencedColumnName = "commerceId"),
             @JoinColumn(name = "paymentId_payIntentionId", referencedColumnName = "payIntentionId")
     })
-    private Payment paymentId;
 
+    private Payment paymentId;
+    private String authorizer;
     private String cardNumber;
 
 

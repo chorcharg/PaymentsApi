@@ -5,15 +5,20 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 @Entity
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class Payment {
 
 
@@ -28,7 +33,10 @@ public class Payment {
     @Enumerated(EnumType.STRING)
     private PaymentStatusEnum status;
 
-    private Date createdAt;
+    @CreationTimestamp
+    private Timestamp createdAt;
+
+    private String description;
 
 
 }

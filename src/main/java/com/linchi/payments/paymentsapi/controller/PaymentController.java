@@ -8,13 +8,14 @@ import com.linchi.payments.paymentsapi.dto.response.PaymentListResp;
 import com.linchi.payments.paymentsapi.dto.response.PaymentResp;
 import com.linchi.payments.paymentsapi.dto.response.PaymentStatusResp;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 
 @RequestMapping("api/payments")
 public interface PaymentController {
+
+
+
 
     @PostMapping("card")
     public ResponseEntity<PaymentResp> cardPayment(@RequestBody CardPaymentReq cardPaymentReq);
@@ -25,10 +26,14 @@ public interface PaymentController {
     @PostMapping("transfer")
     public ResponseEntity<PaymentResp> transferPayment(@RequestBody TransferPaymentReq transferPaymentReq);
 
+
     @PostMapping("list")
     public ResponseEntity<PaymentListResp> paymentsList();
 
     @PostMapping("status")
     public ResponseEntity<PaymentStatusResp> paymentStatus();
+
+    @GetMapping("/health")
+    public ResponseEntity<String> health();
 
 }

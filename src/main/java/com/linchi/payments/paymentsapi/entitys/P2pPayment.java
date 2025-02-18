@@ -1,10 +1,16 @@
 package com.linchi.payments.paymentsapi.entitys;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class P2pPayment {
 
     @Id
@@ -19,9 +25,9 @@ public class P2pPayment {
     })
     private Payment paymentId;
 
+
     private long senderId;
     private long receiverId;
-
     private String note;
 
 }

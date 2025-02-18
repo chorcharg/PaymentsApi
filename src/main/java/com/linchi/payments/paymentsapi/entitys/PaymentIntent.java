@@ -2,18 +2,18 @@ package com.linchi.payments.paymentsapi.entitys;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.io.Serializable;
 
 @Embeddable
 @Data
+@AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class PaymentIntent implements Serializable {
 
     private int commerceId;
-    private String payIntentionId;
+    private int payIntentionId;
 
 }

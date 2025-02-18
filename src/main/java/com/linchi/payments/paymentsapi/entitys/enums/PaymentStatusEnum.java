@@ -3,7 +3,7 @@ package com.linchi.payments.paymentsapi.entitys.enums;
 public enum PaymentStatusEnum {
 
     STARTED,
-    PENDING,
+    ON_COURSE,
     FINISHED,
     ERROR
 
