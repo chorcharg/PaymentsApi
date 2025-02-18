@@ -13,4 +13,9 @@ public class P2pPaymentServiceImpl implements PaymentManagerService {
     public ResponseEntity<PaymentResp> processPayment(PaymentReq paymentReq) {
         return null;
     }
+
+    @Override
+    public void saveTransaction(PaymentReq paymentReq) {
+
+    }
 }
