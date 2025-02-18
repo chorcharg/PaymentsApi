@@ -1,7 +1,9 @@
 package com.linchi.payments.paymentsapi.service.support;
 
+import com.linchi.payments.paymentsapi.dto.request.CardPaymentReq;
 import com.linchi.payments.paymentsapi.dto.request.PaymentReq;
 import com.linchi.payments.paymentsapi.dto.response.PaymentResp;
+import com.linchi.payments.paymentsapi.entitys.CardPayment;
 import com.linchi.payments.paymentsapi.entitys.Payment;
 import com.linchi.payments.paymentsapi.entitys.PaymentIntent;
 import com.linchi.payments.paymentsapi.entitys.enums.PaymentStatusEnum;
@@ -26,12 +28,24 @@ public final class Mappers {
     public static PaymentResp mapPayReqToPayResp(PaymentReq paymentReq, PaymentStatusEnum status, String statusDescription) {
 
         return  PaymentResp.builder()
-                .amount(paymentReq.getAmount())
-                .currency(paymentReq.getCurrency())
-                .commerceId(paymentReq.getCommerceId())
-                .payIntentionId(paymentReq.getPayIntentionId())
+                .paymentReq(paymentReq)
                 .status(status)
                 .statusDescription(statusDescription)
+                .build();
+
+    }
+
+    public static CardPayment mapCardPayReqToCardEntity(PaymentReq paymentReq) {
+        CardPaymentReq cardPaymentReq = (CardPaymentReq) paymentReq;
+        return CardPayment.builder()
+                .paymentId(
+                        PaymentIntent.builder()
+                                .commerceId(paymentReq.getCommerceId())
+                                .payIntentionId(paymentReq.getPayIntentionId())
+                                .build()
+                        )
+                .cardNumber(cardPaymentReq.getCardNumber())
+                .authorizer(cardPaymentReq.getAuthorizer())
                 .build();
 
     }

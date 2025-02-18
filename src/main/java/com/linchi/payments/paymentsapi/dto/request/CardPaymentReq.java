@@ -1,9 +1,13 @@
 package com.linchi.payments.paymentsapi.dto.request;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.linchi.payments.paymentsapi.entitys.Payment;
-import lombok.*;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Positive;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 
 @EqualsAndHashCode(callSuper = true)
@@ -13,10 +17,12 @@ import lombok.*;
 
 public class CardPaymentReq extends PaymentReq {
 
-    @NotBlank(message = "Se debe informar la red de la tarjeta")
-    @Positive(message = "El monto debe ser positivo")
+
+    @NotBlank(message = "Autorizador es obligatrorio")
     private String authorizer;
 
+
+    @NotBlank(message = "tarjeta es obligatrorio")
     private String cardNumber;
 
 

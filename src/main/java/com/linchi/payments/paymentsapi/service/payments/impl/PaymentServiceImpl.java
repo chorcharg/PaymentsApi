@@ -45,22 +45,22 @@ public class PaymentServiceImpl implements PaymentService {
                     HttpStatus.BAD_REQUEST);
         };
 
-        //si no existe, seteamos estatus, hora, y guardamos
+        //si no existe, seteamos status, hora, y guardamos
         payment.setStatus(PaymentStatusEnum.STARTED);
         payment.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
         paymentRepository.save(payment);
 
         //vamos al factory para elegir el manager de pago y pedimos el procesamos
         PaymentManagerService payManager= managerFactory.getPaymentMethod(paymentReq);
-        ResponseEntity<PaymentResp>  paymentResp = payManager.processPayment(paymentReq);
+        ResponseEntity<PaymentResp>  httpPaymentResp = payManager.processPayment(paymentReq);
 
         //guardamos el resultado del servicio en la DB
 
         payment.setStatus(payment.getStatus());
-        payment.setDescription(paymentResp.getBody().getStatusDescription());
+        payment.setDescription(httpPaymentResp.getBody().getStatusDescription());
         paymentRepository.save(payment);
 
-        return paymentResp;
+        return httpPaymentResp;
     }
 
 
