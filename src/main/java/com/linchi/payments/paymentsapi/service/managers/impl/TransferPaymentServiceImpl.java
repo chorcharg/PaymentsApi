@@ -17,4 +17,9 @@ public class TransferPaymentServiceImpl implements PaymentManagerService {
 
         return null;
     }
+
+    @Override
+    public void saveTransaction(PaymentReq paymentReq) {
+
+    }
 }

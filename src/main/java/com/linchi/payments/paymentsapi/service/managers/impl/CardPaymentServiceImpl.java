@@ -2,7 +2,6 @@ package com.linchi.payments.paymentsapi.service.managers.impl;
 
 import com.linchi.payments.paymentsapi.dto.request.PaymentReq;
 import com.linchi.payments.paymentsapi.dto.response.PaymentResp;
-import com.linchi.payments.paymentsapi.entitys.CardPayment;
 import com.linchi.payments.paymentsapi.repository.CardRepository;
 import com.linchi.payments.paymentsapi.service.managers.PaymentManagerService;
 import com.linchi.payments.paymentsapi.service.support.AuthServiceFactory;
@@ -23,13 +22,15 @@ public class CardPaymentServiceImpl implements PaymentManagerService {
     @Override
     public ResponseEntity<PaymentResp> processPayment(PaymentReq paymentReq) {
 
-
-        cardRepository.save(Mappers.mapCardPayReqToCardEntity(paymentReq));
-
         //TO_DO: Reglas de negocio propias del tipo de pago, por ahora solo llama al authorizador
 
         return this.authServiceFactory
                 .getPaymentAuthService(paymentReq)
                 .doPayment(paymentReq);
+    }
+
+    public void saveTransaction(PaymentReq paymentReq) {
+        this.cardRepository.save(Mappers.mapCardPayReqToCardEntity(paymentReq));
+
     }
 }

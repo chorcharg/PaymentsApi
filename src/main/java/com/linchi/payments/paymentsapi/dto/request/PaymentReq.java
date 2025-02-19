@@ -2,10 +2,7 @@ package com.linchi.payments.paymentsapi.dto.request;
 
 
 import com.linchi.payments.paymentsapi.entitys.enums.CurrencyEnum;
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
