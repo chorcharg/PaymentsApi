@@ -8,5 +8,5 @@ import java.util.Optional;
 
 public interface PaymentRepository extends JpaRepository<Payment, Long> {
 
-    Payment findByPaymentIntent(PaymentIntent paymentIntent);
+   Optional< Payment> findByPaymentIntent(PaymentIntent paymentIntent);
 }

@@ -14,11 +14,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class PaymentResp {
 
-
-
     private PaymentStatusEnum status;
     private String statusDescription;
-
     private PaymentReq paymentReq;
+
 
 }

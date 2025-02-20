@@ -6,6 +6,8 @@ import com.linchi.payments.paymentsapi.dto.response.PaymentResp;
 
 import com.linchi.payments.paymentsapi.entitys.Payment;
 import com.linchi.payments.paymentsapi.entitys.enums.PaymentStatusEnum;
+import com.linchi.payments.paymentsapi.excpetions.BussinesException;
+import com.linchi.payments.paymentsapi.excpetions.ExceptionEnum;
 import com.linchi.payments.paymentsapi.repository.PaymentRepository;
 import com.linchi.payments.paymentsapi.service.managers.PaymentManagerService;
 import com.linchi.payments.paymentsapi.service.payments.PaymentService;
@@ -13,7 +15,6 @@ import com.linchi.payments.paymentsapi.service.support.ManagerFactory;
 import com.linchi.payments.paymentsapi.service.support.Mappers;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import java.sql.Timestamp;
@@ -35,20 +36,16 @@ public class PaymentServiceImpl implements PaymentService {
         Payment payment = Mappers.mapPayReqToPayEntity(paymentReq);
 
         //verificamos que la intencion de pago no exista (idempotencia)
-        if( paymentRepository
-                .findByPaymentIntent(payment.getPaymentIntent())!=null)
-        {       return new ResponseEntity<PaymentResp>(
-                    Mappers.mapPayReqToPayResp(
-                            paymentReq,
-                            PaymentStatusEnum.ERROR,
-                            "ID Intencion de pago ya existente"),
-                    HttpStatus.BAD_REQUEST);
-        };
+        payment = paymentRepository
+                    .findByPaymentIntent(payment.getPaymentIntent())
+                    .orElseThrow(() -> new BussinesException(ExceptionEnum.PAYMENT_EXISTS, paymentReq) );
 
-        //vamos al factory para elegir el manager de pago y pedimos el procesamos
+
+
+        //vamos al factory para elegir el manager de pago
         PaymentManagerService payManager= managerFactory.getPaymentMethod(paymentReq);
 
-        //ya tenemos el manager, persisitmos con trasnaction en DB
+        //ya tenemos el manager, persisitmos con transaction en DB
         payment.setStatus(PaymentStatusEnum.STARTED);
         payment.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
         this.saveTransaction(payment, payManager, paymentReq);
@@ -56,7 +53,7 @@ public class PaymentServiceImpl implements PaymentService {
         //procesamos
         ResponseEntity<PaymentResp>  httpPaymentResp = payManager.processPayment(paymentReq);
 
-        //guardamos el resultado del servicio en la DB
+        //guardamos el resultado en la DB
 
         payment.setStatus(httpPaymentResp.getBody().getStatus());
         payment.setDescription(httpPaymentResp.getBody().getStatusDescription());

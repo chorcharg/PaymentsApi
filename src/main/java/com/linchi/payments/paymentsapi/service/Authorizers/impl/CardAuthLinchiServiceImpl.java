@@ -4,6 +4,8 @@ import com.linchi.payments.paymentsapi.dto.request.CardPaymentReq;
 import com.linchi.payments.paymentsapi.dto.request.PaymentReq;
 import com.linchi.payments.paymentsapi.dto.response.PaymentResp;
 import com.linchi.payments.paymentsapi.entitys.enums.PaymentStatusEnum;
+import com.linchi.payments.paymentsapi.excpetions.BussinesException;
+import com.linchi.payments.paymentsapi.excpetions.ExceptionEnum;
 import com.linchi.payments.paymentsapi.service.Authorizers.PaymentAuthService;
 import com.linchi.payments.paymentsapi.service.support.Mappers;
 import org.springframework.http.HttpStatus;
@@ -31,23 +33,14 @@ public class CardAuthLinchiServiceImpl implements PaymentAuthService {
         // esto se reemplazaria con la llamada al/los servicios externos, se mockea aca para no complicar con mas clases
         //para test, importes mayores a 10.000 se rechazan
         if(cardPaymentReq.getAmount() > 10000){
-            return new ResponseEntity<PaymentResp>(
-                    Mappers.mapPayReqToPayResp(paymentReq,
-                            PaymentStatusEnum.ERROR,
-                            "Saldo insuficiente"),
-                    HttpStatus.BAD_REQUEST
-            );
+            throw new BussinesException(ExceptionEnum.INSUFFICIENT_BALANCE, paymentReq);
+
         }
 
         //para test, tarjeta = 123 se rechaza
         if(cardPaymentReq.getCardNumber().equals("123")){
-            return new ResponseEntity<PaymentResp>(
-                    Mappers.mapPayReqToPayResp(
-                            paymentReq,
-                            PaymentStatusEnum.ERROR,
-                            "Tarjeta invalida"),
-                    HttpStatus.BAD_REQUEST
-            );
+
+            throw new BussinesException(ExceptionEnum.INVALID_CARD, paymentReq);
         }
 
         // OK
