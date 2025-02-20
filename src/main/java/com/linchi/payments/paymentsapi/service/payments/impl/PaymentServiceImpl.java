@@ -35,10 +35,11 @@ public class PaymentServiceImpl implements PaymentService {
         //generamos la entidad desde el request
         Payment payment = Mappers.mapPayReqToPayEntity(paymentReq);
 
-        //verificamos que la intencion de pago no exista (idempotencia)
-        payment = paymentRepository
-                    .findByPaymentIntent(payment.getPaymentIntent())
-                    .orElseThrow(() -> new BussinesException(ExceptionEnum.PAYMENT_EXISTS, paymentReq) );
+        //verificamos que la intencion de pago no exista
+        if(paymentRepository.findByPaymentIntent(payment.getPaymentIntent()).isPresent())
+        {
+            throw new BussinesException(ExceptionEnum.PAYMENT_EXISTS, paymentReq);
+        };
 
 
 
