@@ -3,6 +3,7 @@ package com.linchi.payments.paymentsapi.dto.request;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.AllArgsConstructor;
@@ -12,17 +13,16 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-
 public class TransferPaymentReq extends PaymentReq {
 
-    @Positive(message = "el valor no puede ser negativo")
-    @NotNull(message = "pagador es obligatorio")
+    @Positive
+    @NotNull
     long userId;
 
-    @NotBlank(message = "banco destino es obligatorio")
+    @NotBlank
     private String bankCode;
 
-    @NotBlank(message = "cuenta destino obligatorio")
+    @NotBlank
     private String toAcct;
 
 }

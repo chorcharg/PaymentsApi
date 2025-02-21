@@ -1,17 +1,20 @@
 package com.linchi.payments.paymentsapi.entitys;
+
 import com.linchi.payments.paymentsapi.entitys.enums.CurrencyEnum;
 import com.linchi.payments.paymentsapi.entitys.enums.PaymentStatusEnum;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import org.hibernate.annotations.CreationTimestamp;
 
-import java.sql.Date;
 import java.sql.Timestamp;
 
 @Entity
@@ -20,7 +23,6 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @Builder
 public class Payment {
-
 
     @EmbeddedId
     private PaymentIntent paymentIntent;
@@ -37,6 +39,5 @@ public class Payment {
     private Timestamp createdAt;
 
     private String description;
-
 
 }

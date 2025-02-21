@@ -2,23 +2,21 @@ package com.linchi.payments.paymentsapi.service.Authorizers;
 
 import com.linchi.payments.paymentsapi.dto.request.PaymentReq;
 import com.linchi.payments.paymentsapi.dto.response.PaymentResp;
-import com.linchi.payments.paymentsapi.entitys.enums.PaymentStatusEnum;
+import com.linchi.payments.paymentsapi.service.Authorizers.support.AuthsEnum;
 import org.springframework.http.ResponseEntity;
+
+//reglas de negocio del autorizador
+//llamado al servicio
+//mapeo de codigos de respuesta
 
 public interface PaymentAuthService {
 
-    public ResponseEntity<PaymentResp> doPayment(PaymentReq paymentReq);
+    public PaymentResp doPayment(PaymentReq paymentReq);
 
-    public default void callBack(){
-
-        throw new UnsupportedOperationException();
-    }
+    public AuthsEnum getAuth();
 
     public default void reverse(){
-
         throw new UnsupportedOperationException();
     }
-
-
 
 }
