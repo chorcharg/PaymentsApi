@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 
 public interface PaymentManagerService {
 
-    public ResponseEntity<PaymentResp> processPayment(PaymentReq paymentReq);
+    public PaymentResp processPayment(PaymentReq paymentReq);
 
     public void saveTransaction(PaymentReq paymentReq);
 

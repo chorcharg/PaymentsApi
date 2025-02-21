@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 public class TransferPaymentServiceImpl implements PaymentManagerService {
 
     @Override
-    public ResponseEntity<PaymentResp> processPayment(PaymentReq paymentReq) { return null; }
+    public PaymentResp processPayment(PaymentReq paymentReq) { return null; }
 
     @Override
     public void saveTransaction(PaymentReq paymentReq) {}

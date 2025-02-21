@@ -16,9 +16,11 @@ import com.linchi.payments.paymentsapi.service.support.Mappers;
 import jakarta.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.net.http.HttpResponse;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
@@ -37,10 +39,11 @@ public class PaymentServiceImpl implements PaymentService {
         PaymentManagerService payManager = managerFactory.getPaymentMethod(paymentReq);
 
         Payment payment = this.startPayment(paymentReq, payManager);
-        ResponseEntity<PaymentResp> httpPaymentResp = this.callManager(payManager, paymentReq);
-        this.finish(payment, httpPaymentResp);
+        PaymentResp paymentResp = this.callManager(payManager, paymentReq);
 
-        return httpPaymentResp;
+        this.finish(payment, paymentResp);
+
+        return new ResponseEntity<PaymentResp>(paymentResp, HttpStatus.OK);
     }
 
     @Transactional
@@ -55,20 +58,20 @@ public class PaymentServiceImpl implements PaymentService {
         payment.setStatus(PaymentStatusEnum.STARTED);
         payment.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
         this.saveTransaction(payment, payManager, paymentReq);
-
         return payment;
     }
 
-    private ResponseEntity<PaymentResp> callManager(PaymentManagerService payManager, PaymentReq paymentReq) {
+    private PaymentResp callManager(PaymentManagerService payManager, PaymentReq paymentReq) {
 
-        ResponseEntity<PaymentResp> httpPaymentResp = payManager.processPayment(paymentReq);
+        PaymentResp paymentResp = payManager.processPayment(paymentReq);
 
-        return httpPaymentResp;
+
+        return paymentResp;
     }
 
-    private void finish(Payment payment, ResponseEntity<PaymentResp> httpPaymentResp) {
-        payment.setStatus(httpPaymentResp.getBody().getStatus());
-        payment.setDescription(httpPaymentResp.getBody().getStatusDescription());
+    private void finish(Payment payment, PaymentResp paymentResp) {
+        payment.setStatus(paymentResp.getStatus());
+        payment.setDescription(paymentResp.getStatusDescription());
         this.paymentRepository.save(payment);
     }
 
