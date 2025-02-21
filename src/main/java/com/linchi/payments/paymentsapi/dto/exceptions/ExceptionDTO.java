@@ -1,11 +1,10 @@
 package com.linchi.payments.paymentsapi.dto.exceptions;
 
-
 import com.linchi.payments.paymentsapi.dto.request.PaymentReq;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
 @Builder
@@ -15,7 +14,5 @@ public class ExceptionDTO {
     private String code;
     private String message;
     private PaymentReq paymentReq;
-
-
 
 }

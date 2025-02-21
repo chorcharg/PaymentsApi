@@ -3,6 +3,7 @@ package com.linchi.payments.paymentsapi.service.support;
 import com.linchi.payments.paymentsapi.dto.request.CardPaymentReq;
 import com.linchi.payments.paymentsapi.dto.request.PaymentReq;
 import com.linchi.payments.paymentsapi.dto.request.TransferPaymentReq;
+import com.linchi.payments.paymentsapi.excpetions.FactoryException;
 import com.linchi.payments.paymentsapi.service.managers.PaymentManagerService;
 import com.linchi.payments.paymentsapi.service.managers.impl.CardPaymentServiceImpl;
 import com.linchi.payments.paymentsapi.service.managers.impl.TransferPaymentServiceImpl;
@@ -31,7 +32,7 @@ public class ManagerFactory {
             return context.getBean(TransferPaymentServiceImpl.class);
         }
 
-        throw new IllegalArgumentException("No se encontraron Servicios para el Request: " + paymentReq.getClass().getSimpleName());
+        throw new FactoryException(this.getClass().toString(), paymentReq);
 
     }
 }

@@ -1,27 +1,26 @@
 package com.linchi.payments.paymentsapi.service.payments.impl;
 
 
-import com.linchi.payments.paymentsapi.dto.exceptions.ExceptionDTO;
 import com.linchi.payments.paymentsapi.dto.request.PaymentReq;
 import com.linchi.payments.paymentsapi.dto.response.PaymentResp;
-
 import com.linchi.payments.paymentsapi.entitys.Payment;
 import com.linchi.payments.paymentsapi.entitys.enums.PaymentStatusEnum;
-import com.linchi.payments.paymentsapi.excpetions.BussinesException;
-import com.linchi.payments.paymentsapi.excpetions.ExceptionEnum;
+import com.linchi.payments.paymentsapi.excpetions.BusinessException;
+import com.linchi.payments.paymentsapi.service.support.BussinesResultEnum;
 import com.linchi.payments.paymentsapi.repository.PaymentRepository;
 import com.linchi.payments.paymentsapi.service.managers.PaymentManagerService;
 import com.linchi.payments.paymentsapi.service.payments.PaymentService;
 import com.linchi.payments.paymentsapi.service.support.ManagerFactory;
 import com.linchi.payments.paymentsapi.service.support.Mappers;
+
 import jakarta.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-
 
 @Service
 public class PaymentServiceImpl implements PaymentService {
@@ -38,18 +37,19 @@ public class PaymentServiceImpl implements PaymentService {
         PaymentManagerService payManager = managerFactory.getPaymentMethod(paymentReq);
 
         Payment payment = this.startPayment(paymentReq, payManager);
-        ResponseEntity<PaymentResp> httpPaymentResp = this.callAuth(payment, payManager, paymentReq);
+        ResponseEntity<PaymentResp> httpPaymentResp = this.callManager(payManager, paymentReq);
         this.finish(payment, httpPaymentResp);
 
         return httpPaymentResp;
     }
 
-    private Payment startPayment(PaymentReq paymentReq, PaymentManagerService payManager) {
+    @Transactional
+    public Payment startPayment(PaymentReq paymentReq, PaymentManagerService payManager) {
 
         Payment payment = Mappers.mapPayReqToPayEntity(paymentReq);
 
         if (paymentRepository.findByPaymentIntent(payment.getPaymentIntent()).isPresent()) {
-            throw new BussinesException(ExceptionEnum.PAYMENT_EXISTS, paymentReq);
+            throw new BusinessException(BussinesResultEnum.PAYMENT_EXISTS, paymentReq);
         }
 
         payment.setStatus(PaymentStatusEnum.STARTED);
@@ -59,7 +59,7 @@ public class PaymentServiceImpl implements PaymentService {
         return payment;
     }
 
-    private ResponseEntity<PaymentResp> callAuth(Payment payment, PaymentManagerService payManager, PaymentReq paymentReq) {
+    private ResponseEntity<PaymentResp> callManager(PaymentManagerService payManager, PaymentReq paymentReq) {
 
         ResponseEntity<PaymentResp> httpPaymentResp = payManager.processPayment(paymentReq);
 

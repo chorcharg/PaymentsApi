@@ -10,16 +10,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class TransferPaymentServiceImpl implements PaymentManagerService {
 
-
+    @Override
+    public ResponseEntity<PaymentResp> processPayment(PaymentReq paymentReq) { return null; }
 
     @Override
-    public ResponseEntity<PaymentResp> processPayment(PaymentReq paymentReq) {
-
-        return null;
-    }
-
-    @Override
-    public void saveTransaction(PaymentReq paymentReq) {
-
-    }
+    public void saveTransaction(PaymentReq paymentReq) {}
 }

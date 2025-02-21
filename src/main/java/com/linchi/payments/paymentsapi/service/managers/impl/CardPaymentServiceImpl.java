@@ -1,5 +1,6 @@
 package com.linchi.payments.paymentsapi.service.managers.impl;
 
+import com.linchi.payments.paymentsapi.dto.request.CardPaymentReq;
 import com.linchi.payments.paymentsapi.dto.request.PaymentReq;
 import com.linchi.payments.paymentsapi.dto.response.PaymentResp;
 import com.linchi.payments.paymentsapi.repository.CardRepository;
@@ -25,16 +26,18 @@ public class CardPaymentServiceImpl implements PaymentManagerService {
     @Override
     public ResponseEntity<PaymentResp> processPayment(PaymentReq paymentReq) {
 
-        //TO_DO: Reglas de negocio propias del tipo de pago, por ahora solo llama al authorizador
+        CardPaymentReq cardPaymentReq = (CardPaymentReq) paymentReq;
+
+        //reglas.....
 
         return this.authServiceFactory
-                .getPaymentAuthService(paymentReq)
-                .doPayment(paymentReq);
+                .getPaymentAuthService(cardPaymentReq)
+                .doPayment(cardPaymentReq);
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
     public void saveTransaction(PaymentReq paymentReq) {
         this.cardRepository.save(Mappers.mapCardPayReqToCardEntity(paymentReq));
-
     }
+
 }

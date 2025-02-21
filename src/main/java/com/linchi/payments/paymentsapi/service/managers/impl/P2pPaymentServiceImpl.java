@@ -8,14 +8,11 @@ import org.springframework.http.ResponseEntity;
 
 public class P2pPaymentServiceImpl implements PaymentManagerService {
 
-
     @Override
     public ResponseEntity<PaymentResp> processPayment(PaymentReq paymentReq) {
         return null;
     }
 
     @Override
-    public void saveTransaction(PaymentReq paymentReq) {
-
-    }
+    public void saveTransaction(PaymentReq paymentReq) {}
 }

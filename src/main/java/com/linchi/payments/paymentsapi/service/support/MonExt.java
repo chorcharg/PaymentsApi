@@ -9,13 +9,13 @@ public enum MonExt {
 
     private final double rate;
 
-
     MonExt(double rate) {
         this.rate = rate;
     }
 
-    public double rateToArs() {
-        return rate;
+    public double rateToArs(Double amount)
+    {
+        return rate * amount;
     }
 
 }
