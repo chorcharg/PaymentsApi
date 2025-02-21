@@ -6,7 +6,7 @@ import com.linchi.payments.paymentsapi.dto.request.TransferPaymentReq;
 import com.linchi.payments.paymentsapi.excpetions.FactoryException;
 import com.linchi.payments.paymentsapi.service.Authorizers.PaymentAuthService;
 import com.linchi.payments.paymentsapi.service.Authorizers.impl.CardAuthLinchiServiceImpl;
-import com.linchi.payments.paymentsapi.service.Authorizers.impl.UserIdPaymentAuthServiceImpl;
+import com.linchi.payments.paymentsapi.service.Authorizers.impl.P2pAuthMeliServiceImpl;
 
 import com.linchi.payments.paymentsapi.service.Authorizers.support.AuthsEnum;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +49,7 @@ public class AuthServiceFactory {
             return context.getBean(CardAuthLinchiServiceImpl.class);
 
         } else if(paymentReq instanceof TransferPaymentReq){
-            return context.getBean(UserIdPaymentAuthServiceImpl.class);
+            return context.getBean(P2pAuthMeliServiceImpl.class);
         }
 
         throw new FactoryException(this.getClass().toString(), paymentReq);

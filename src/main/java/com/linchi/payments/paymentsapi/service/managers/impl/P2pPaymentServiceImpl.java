@@ -30,7 +30,7 @@ public class P2pPaymentServiceImpl implements PaymentManagerService {
 
         PaymentAuthService paymentAuthService =
                 this.authServiceFactory
-                        .getPaymentAuthService("user_id");
+                        .getPaymentAuthService("P2P");
 
         if (paymentAuthService == null) {
             return Mappers.mapPayReqToPayResp(
@@ -45,9 +45,7 @@ public class P2pPaymentServiceImpl implements PaymentManagerService {
 
     @Override
     public void saveTransaction(PaymentReq paymentReq) {
-        this.p2pRepository.save(
-                this.p2pRepository.save(Mappers.mapP2pPayReqToP2pEntity(paymentReq))
-        );
+        this.p2pRepository.save(Mappers.mapP2pPayReqToP2pEntity(paymentReq));
 
     }
 }

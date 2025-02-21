@@ -32,7 +32,7 @@ public class PaymentControllerImpl implements PaymentController {
 
     @Override
     public ResponseEntity<PaymentResp> transferPayment(TransferPaymentReq transferPaymentReq) {
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+        return this.paymentService.doPayment(transferPaymentReq);
     }
 
     @Override

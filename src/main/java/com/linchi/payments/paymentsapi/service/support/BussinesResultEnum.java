@@ -10,7 +10,9 @@ public enum BussinesResultEnum {
     INSUFFICIENT_BALANCE("11","Saldo Insuficiente"),
     INVALID_CARD("11","Tarjeta Invalida"),
     INVALID_AUTHORIZER("12","Sin proveedor de autorizacion"),
-    INVALID_USER("13","Usuario Invalido");
+    INVALID_USER("13","Usuario Invalido"),
+    INVALID_BANK_CODE("14","El identificador de banco no es valido"),;
+
 
     private final String code;
     private final String description;
