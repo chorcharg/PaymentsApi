@@ -6,6 +6,7 @@ import com.linchi.payments.paymentsapi.dto.response.PaymentResp;
 import com.linchi.payments.paymentsapi.dto.response.PaymentStatusResp;
 
 import com.linchi.payments.paymentsapi.entitys.Payment;
+import com.linchi.payments.paymentsapi.entitys.enums.CurrencyEnum;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+
+import java.util.List;
 
 @Validated
 @RequestMapping("api/payments")
@@ -36,5 +39,8 @@ public interface PaymentController {
 
     @GetMapping("/health")
     public ResponseEntity<String> health();
+
+    @GetMapping("/currency")
+    public List<String> currency();
 
 }

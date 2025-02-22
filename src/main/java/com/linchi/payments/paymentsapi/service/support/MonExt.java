@@ -1,5 +1,8 @@
 package com.linchi.payments.paymentsapi.service.support;
 
+import lombok.Getter;
+
+@Getter
 public enum MonExt {
 
     ARS(1),

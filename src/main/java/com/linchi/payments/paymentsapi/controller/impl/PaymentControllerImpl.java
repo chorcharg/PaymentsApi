@@ -7,10 +7,15 @@ import com.linchi.payments.paymentsapi.dto.response.PaymentResp;
 
 import com.linchi.payments.paymentsapi.service.payments.PaymentService;
 
+import com.linchi.payments.paymentsapi.service.support.MonExt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -52,6 +57,11 @@ public class PaymentControllerImpl implements PaymentController {
                 "OK",
                 HttpStatus.OK
         );
+    }
+
+    @Override
+    public List<String> currency() {
+        return paymentService.getCurrency();
     }
 
 }

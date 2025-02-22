@@ -1,6 +1,6 @@
 package com.linchi.payments.paymentsapi.controller.impl;
 
-import com.linchi.payments.paymentsapi.dto.exceptions.ExceptionDTO;
+import com.linchi.payments.paymentsapi.dto.response.ExceptionDTO;
 import com.linchi.payments.paymentsapi.dto.request.PaymentReq;
 import com.linchi.payments.paymentsapi.dto.request.PaymentStatusReq;
 import com.linchi.payments.paymentsapi.excpetions.BusinessException;

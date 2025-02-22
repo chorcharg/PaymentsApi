@@ -1,6 +1,4 @@
-package com.linchi.payments.paymentsapi.dto.exceptions;
-
-import com.linchi.payments.paymentsapi.dto.request.PaymentReq;
+package com.linchi.payments.paymentsapi.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

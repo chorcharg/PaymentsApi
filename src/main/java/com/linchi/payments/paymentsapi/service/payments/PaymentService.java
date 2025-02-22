@@ -10,6 +10,8 @@ import com.linchi.payments.paymentsapi.entitys.Payment;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 
+import java.util.List;
+
 // reglas de negocio de la api
 // se ocupa de la persistencia y actualizacion de estados
 
@@ -21,5 +23,5 @@ public interface PaymentService {
 
     public PaymentListResp getPaymentsList(PaymentListReq paymentListReq);
 
-
+    public List<String> getCurrency();
 }
