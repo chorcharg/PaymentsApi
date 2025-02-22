@@ -80,5 +80,16 @@ public final class Mappers {
 
     }
 
+    public static PaymentReq mapPayEntityToPaymentReq(Payment payment) {
+        return PaymentReq
+                .builder()
+                .amount(payment.getAmount())
+                .currency(payment.getCurrency())
+                .commerceId(payment.getPaymentIntent().getCommerceId())
+                .payIntentionId(payment.getPaymentIntent().getPayIntentionId())
+                .build();
+
+    }
+
 }
 

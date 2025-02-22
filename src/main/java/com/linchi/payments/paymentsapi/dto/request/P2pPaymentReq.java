@@ -1,5 +1,6 @@
 package com.linchi.payments.paymentsapi.dto.request;
 
+import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 

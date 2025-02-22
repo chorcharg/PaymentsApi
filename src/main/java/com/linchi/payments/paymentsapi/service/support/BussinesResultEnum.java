@@ -11,7 +11,10 @@ public enum BussinesResultEnum {
     INVALID_CARD("11","Tarjeta Invalida"),
     INVALID_AUTHORIZER("12","Sin proveedor de autorizacion"),
     INVALID_USER("13","Usuario Invalido"),
-    INVALID_BANK_CODE("14","El identificador de banco no es valido"),;
+    INVALID_BANK_CODE("14","El identificador de banco no es valido"),
+    PAYMENT_NOT_FOUND("15","El identificador de pago no existe"),
+    PAYMENT_FOUND("00","Pago encontrado"),
+    ;
 
 
     private final String code;

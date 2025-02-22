@@ -1,13 +1,13 @@
 package com.linchi.payments.paymentsapi.controller;
 
-import com.linchi.payments.paymentsapi.dto.request.CardPaymentReq;
-import com.linchi.payments.paymentsapi.dto.request.P2pPaymentReq;
-import com.linchi.payments.paymentsapi.dto.request.TransferPaymentReq;
+import com.linchi.payments.paymentsapi.dto.request.*;
 import com.linchi.payments.paymentsapi.dto.response.PaymentListResp;
 import com.linchi.payments.paymentsapi.dto.response.PaymentResp;
 import com.linchi.payments.paymentsapi.dto.response.PaymentStatusResp;
 
+import com.linchi.payments.paymentsapi.entitys.Payment;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,10 +29,10 @@ public interface PaymentController {
     public ResponseEntity<PaymentResp> transferPayment(@Valid @RequestBody TransferPaymentReq transferPaymentReq);
 
     @PostMapping("/list")
-    public ResponseEntity<PaymentListResp> paymentsList();
+    public PaymentListResp paymentsList(@Valid @RequestBody PaymentListReq paymentListReq);
 
     @PostMapping("/status")
-    public ResponseEntity<PaymentStatusResp> paymentStatus();
+    public ResponseEntity<PaymentResp> paymentStatus(@Valid @RequestBody PaymentStatusReq paymentStatusReq);
 
     @GetMapping("/health")
     public ResponseEntity<String> health();

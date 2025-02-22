@@ -9,10 +9,10 @@ import lombok.Data;
 @Data
 @Builder
 @AllArgsConstructor
-public class ExceptionDTO {
+public class ExceptionDTO <T>{
 
     private String code;
     private String message;
-    private PaymentReq paymentReq;
+    private T request;
 
 }
