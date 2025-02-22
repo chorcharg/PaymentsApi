@@ -29,6 +29,8 @@ public class Payment {
 
     private Double amount;
 
+    private Double localAmount;
+
     @Enumerated(EnumType.STRING)
     private CurrencyEnum currency;
 

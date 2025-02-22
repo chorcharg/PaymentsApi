@@ -9,6 +9,7 @@ import com.linchi.payments.paymentsapi.dto.response.PaymentListResp;
 import com.linchi.payments.paymentsapi.dto.response.PaymentResp;
 import com.linchi.payments.paymentsapi.entitys.Payment;
 import com.linchi.payments.paymentsapi.entitys.PaymentIntent;
+import com.linchi.payments.paymentsapi.entitys.enums.CurrencyEnum;
 import com.linchi.payments.paymentsapi.entitys.enums.PaymentStatusEnum;
 import com.linchi.payments.paymentsapi.excpetions.BusinessException;
 import com.linchi.payments.paymentsapi.excpetions.PaymentsNotFoundException;
@@ -19,6 +20,7 @@ import com.linchi.payments.paymentsapi.service.payments.PaymentService;
 import com.linchi.payments.paymentsapi.service.support.ManagerFactory;
 import com.linchi.payments.paymentsapi.service.support.Mappers;
 
+import com.linchi.payments.paymentsapi.service.support.MonExt;
 import jakarta.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,10 +100,17 @@ public class PaymentServiceImpl implements PaymentService {
     public Payment startPayment(PaymentReq paymentReq, PaymentManagerService payManager) {
 
         Payment payment = Mappers.mapPayReqToPayEntity(paymentReq);
+        MonExt monExt = MonExt.valueOf(payment.getCurrency().toString());
+        payment.setLocalAmount(
+                monExt.rateToArs(payment.getAmount())
+        );
 
         if (paymentRepository.findByPaymentIntent(payment.getPaymentIntent()).isPresent()) {
             throw new BusinessException(BussinesResultEnum.PAYMENT_EXISTS, paymentReq);
         }
+
+        paymentReq.setCurrency(CurrencyEnum.ARS);
+        paymentReq.setAmount(payment.getLocalAmount());
 
         payment.setStatus(PaymentStatusEnum.STARTED);
         payment.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
