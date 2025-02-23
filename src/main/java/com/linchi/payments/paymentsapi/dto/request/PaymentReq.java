@@ -1,6 +1,6 @@
 package com.linchi.payments.paymentsapi.dto.request;
 
-import com.linchi.payments.paymentsapi.entitys.enums.CurrencyEnum;
+import com.linchi.payments.paymentsapi.service.support.enums.CurrencyEnum;
 
 import jakarta.validation.constraints.*;
 

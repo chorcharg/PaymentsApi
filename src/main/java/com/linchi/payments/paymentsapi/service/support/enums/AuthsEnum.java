@@ -1,4 +1,4 @@
-package com.linchi.payments.paymentsapi.service.Authorizers.support;
+package com.linchi.payments.paymentsapi.service.support.enums;
 
 import lombok.Getter;
 
@@ -9,7 +9,8 @@ public enum AuthsEnum {
 
     BISMA ("bisma"),
     LINCHI ("linchi"),
-    USER_ID("user_id"),
+    P2P("P2P"),
+    TRANSFER("transfer"),
     NOT_FOUND("not_found");
 
     private final String name;

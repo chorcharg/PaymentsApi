@@ -1,7 +1,7 @@
 package com.linchi.payments.paymentsapi.service.Authorizers.impl;
 
-import com.linchi.payments.paymentsapi.dto.request.CardPaymentReq;
 import com.linchi.payments.paymentsapi.dto.request.PaymentReq;
+import com.linchi.payments.paymentsapi.dto.request.TransferPaymentReq;
 import com.linchi.payments.paymentsapi.dto.response.PaymentResp;
 import com.linchi.payments.paymentsapi.entitys.enums.PaymentStatusEnum;
 import com.linchi.payments.paymentsapi.service.Authorizers.PaymentAuthService;
@@ -11,34 +11,19 @@ import com.linchi.payments.paymentsapi.service.support.Mappers;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CardAuthBismaServiceImpl implements PaymentAuthService {
-
+public class TrasnferAuthLinchiServiceImpl implements PaymentAuthService {
     @Override
     public PaymentResp doPayment(PaymentReq paymentReq) {
+        TransferPaymentReq transferPaymentReq = (TransferPaymentReq) paymentReq;
 
-        CardPaymentReq cardPaymentReq = (CardPaymentReq)paymentReq;
-
-
-        if(cardPaymentReq.getAmount() == 321){
-            return Mappers.mapPayReqToPayResp(
-                    paymentReq,
-                    PaymentStatusEnum.REJECTED,
-                    BussinesResultEnum.INSUFFICIENT_BALANCE.getDescription()
-            );
-
-            //  throw new BusinessException(BussinesResultEnum.INSUFFICIENT_BALANCE, paymentReq);
-        }
-
-        if(cardPaymentReq.getCardNumber().equals("321")){
-
+        if(transferPaymentReq.getBankCode().equals("PARIBAS")) {
             return Mappers.mapPayReqToPayResp(
                     paymentReq,
                     PaymentStatusEnum.ERROR,
-                    BussinesResultEnum.INVALID_CARD.getDescription()
+                    BussinesResultEnum.INVALID_BANK_CODE.getDescription()
             );
-
-            //  throw new BusinessException(BussinesResultEnum.INVALID_CARD, paymentReq);
         }
+
 
         return Mappers.mapPayReqToPayResp(
                 paymentReq,
@@ -50,6 +35,6 @@ public class CardAuthBismaServiceImpl implements PaymentAuthService {
 
     @Override
     public AuthsEnum getAuth() {
-        return AuthsEnum.BISMA;
+        return AuthsEnum.TRANSFER;
     }
 }

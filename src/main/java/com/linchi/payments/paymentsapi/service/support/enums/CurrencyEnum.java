@@ -1,6 +1,9 @@
-package com.linchi.payments.paymentsapi.service.support;
+package com.linchi.payments.paymentsapi.service.support.enums;
 
-public enum MonExt {
+import lombok.Getter;
+
+@Getter
+public enum CurrencyEnum {
 
     ARS(1),
     EUR(1300.08),
@@ -9,7 +12,7 @@ public enum MonExt {
 
     private final double rate;
 
-    MonExt(double rate) {
+    CurrencyEnum(double rate) {
         this.rate = rate;
     }
 

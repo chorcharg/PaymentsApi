@@ -1,20 +1,18 @@
 package com.linchi.payments.paymentsapi.service.Authorizers.impl;
 
-import com.linchi.payments.paymentsapi.dto.request.CardPaymentReq;
 import com.linchi.payments.paymentsapi.dto.request.P2pPaymentReq;
 import com.linchi.payments.paymentsapi.dto.request.PaymentReq;
 import com.linchi.payments.paymentsapi.dto.response.PaymentResp;
 import com.linchi.payments.paymentsapi.entitys.enums.PaymentStatusEnum;
 import com.linchi.payments.paymentsapi.service.Authorizers.PaymentAuthService;
 
-import com.linchi.payments.paymentsapi.service.Authorizers.support.AuthsEnum;
-import com.linchi.payments.paymentsapi.service.support.BussinesResultEnum;
+import com.linchi.payments.paymentsapi.service.support.enums.AuthsEnum;
+import com.linchi.payments.paymentsapi.service.support.enums.BussinesResultEnum;
 import com.linchi.payments.paymentsapi.service.support.Mappers;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserIdPaymentAuthServiceImpl implements PaymentAuthService {
+public class P2pAuthMeliServiceImpl implements PaymentAuthService {
 
     @Override
     public PaymentResp doPayment(PaymentReq paymentReq) {
@@ -38,7 +36,7 @@ public class UserIdPaymentAuthServiceImpl implements PaymentAuthService {
 
     @Override
     public AuthsEnum getAuth() {
-        return AuthsEnum.USER_ID;
+        return AuthsEnum.P2P;
     }
 
 }

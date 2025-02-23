@@ -3,11 +3,9 @@ package com.linchi.payments.paymentsapi.service.support;
 import com.linchi.payments.paymentsapi.dto.request.CardPaymentReq;
 import com.linchi.payments.paymentsapi.dto.request.P2pPaymentReq;
 import com.linchi.payments.paymentsapi.dto.request.PaymentReq;
+import com.linchi.payments.paymentsapi.dto.request.TransferPaymentReq;
 import com.linchi.payments.paymentsapi.dto.response.PaymentResp;
-import com.linchi.payments.paymentsapi.entitys.CardPayment;
-import com.linchi.payments.paymentsapi.entitys.P2pPayment;
-import com.linchi.payments.paymentsapi.entitys.Payment;
-import com.linchi.payments.paymentsapi.entitys.PaymentIntent;
+import com.linchi.payments.paymentsapi.entitys.*;
 import com.linchi.payments.paymentsapi.entitys.enums.PaymentStatusEnum;
 
 public final class Mappers {
@@ -60,6 +58,35 @@ public final class Mappers {
                 .receiverId(p2pPaymentReq.getReceiverId())
                 .note(p2pPaymentReq.getNote())
 
+                .build();
+
+    }
+
+    public static TransferPayment mapTransfPayReqToTransfEntity(PaymentReq paymentReq) {
+        TransferPaymentReq transferPaymentReq = (TransferPaymentReq) paymentReq;
+
+        return TransferPayment
+                .builder()
+                .paymentId(PaymentIntent
+                        .builder()
+                        .commerceId(paymentReq.getCommerceId())
+                        .payIntentionId(paymentReq.getPayIntentionId())
+                        .build())
+                .userId(transferPaymentReq.getUserId())
+                .bankCode(transferPaymentReq.getBankCode())
+                .toAcct(transferPaymentReq.getToAcct())
+                .build();
+
+
+    }
+
+    public static PaymentReq mapPayEntityToPaymentReq(Payment payment) {
+        return PaymentReq
+                .builder()
+                .amount(payment.getAmount())
+                .currency(payment.getCurrency())
+                .commerceId(payment.getPaymentIntent().getCommerceId())
+                .payIntentionId(payment.getPaymentIntent().getPayIntentionId())
                 .build();
 
     }

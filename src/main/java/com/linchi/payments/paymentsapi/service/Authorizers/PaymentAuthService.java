@@ -2,8 +2,7 @@ package com.linchi.payments.paymentsapi.service.Authorizers;
 
 import com.linchi.payments.paymentsapi.dto.request.PaymentReq;
 import com.linchi.payments.paymentsapi.dto.response.PaymentResp;
-import com.linchi.payments.paymentsapi.service.Authorizers.support.AuthsEnum;
-import org.springframework.http.ResponseEntity;
+import com.linchi.payments.paymentsapi.service.support.enums.AuthsEnum;
 
 //reglas de negocio del autorizador
 //llamado al servicio
