@@ -8,21 +8,28 @@ import com.linchi.payments.paymentsapi.repository.TransferRepository;
 import com.linchi.payments.paymentsapi.service.Authorizers.PaymentAuthService;
 import com.linchi.payments.paymentsapi.service.managers.PaymentManagerService;
 
-import com.linchi.payments.paymentsapi.service.support.AuthServiceFactory;
-import com.linchi.payments.paymentsapi.service.support.BussinesResultEnum;
-import com.linchi.payments.paymentsapi.service.support.Mappers;
+import com.linchi.payments.paymentsapi.service.support.*;
+import com.linchi.payments.paymentsapi.service.support.enums.AuthsEnum;
+import com.linchi.payments.paymentsapi.service.support.enums.BussinesResultEnum;
+import com.linchi.payments.paymentsapi.service.support.enums.ManagersEnum;
+import com.linchi.payments.paymentsapi.service.support.factorys.AuthServiceFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class TransferPaymentServiceImpl implements PaymentManagerService {
 
-    @Autowired
-    private AuthServiceFactory authServiceFactory;
+
+    private final AuthServiceFactory authServiceFactory;
+    private final TransferRepository transferRepository;
 
     @Autowired
-    private TransferRepository transferRepository;
+    public TransferPaymentServiceImpl(AuthServiceFactory authServiceFactory, TransferRepository transferRepository) {
+        this.authServiceFactory = authServiceFactory;
+        this.transferRepository = transferRepository;
+    }
 
     @Override
     public PaymentResp processPayment(PaymentReq paymentReq) {
@@ -31,7 +38,7 @@ public class TransferPaymentServiceImpl implements PaymentManagerService {
 
         PaymentAuthService paymentAuthService =
                 this.authServiceFactory
-                        .getPaymentAuthService("transfer");
+                        .getPaymentAuthService(AuthsEnum.TRANSFER);
 
         if (paymentAuthService == null) {
             return Mappers.mapPayReqToPayResp(
@@ -45,8 +52,14 @@ public class TransferPaymentServiceImpl implements PaymentManagerService {
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public void saveTransaction(PaymentReq paymentReq) {
         this.transferRepository.save(Mappers.mapTransfPayReqToTransfEntity(paymentReq));
 
+    }
+
+    @Override
+    public ManagersEnum getManager() {
+        return ManagersEnum.TransferManager;
     }
 }

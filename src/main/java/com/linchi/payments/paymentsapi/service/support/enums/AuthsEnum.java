@@ -1,4 +1,4 @@
-package com.linchi.payments.paymentsapi.service.Authorizers.support;
+package com.linchi.payments.paymentsapi.service.support.enums;
 
 import lombok.Getter;
 

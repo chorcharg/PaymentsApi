@@ -1,7 +1,7 @@
 package com.linchi.payments.paymentsapi.excpetions;
 
 import com.linchi.payments.paymentsapi.dto.request.PaymentReq;
-import com.linchi.payments.paymentsapi.service.support.BussinesResultEnum;
+import com.linchi.payments.paymentsapi.service.support.enums.BussinesResultEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

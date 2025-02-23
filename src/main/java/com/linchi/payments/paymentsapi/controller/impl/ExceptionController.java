@@ -7,7 +7,7 @@ import com.linchi.payments.paymentsapi.excpetions.BusinessException;
 import com.linchi.payments.paymentsapi.excpetions.FactoryException;
 
 import com.linchi.payments.paymentsapi.excpetions.PaymentsNotFoundException;
-import com.linchi.payments.paymentsapi.service.support.BussinesResultEnum;
+import com.linchi.payments.paymentsapi.service.support.enums.BussinesResultEnum;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -18,8 +18,6 @@ import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class ExceptionController {
-
-
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)

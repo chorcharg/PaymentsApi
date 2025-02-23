@@ -7,36 +7,39 @@ import com.linchi.payments.paymentsapi.dto.response.PaymentResp;
 
 import com.linchi.payments.paymentsapi.service.payments.PaymentService;
 
-import com.linchi.payments.paymentsapi.service.support.MonExt;
+import com.linchi.payments.paymentsapi.service.support.enums.ManagersEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 @RestController
 public class PaymentControllerImpl implements PaymentController {
 
+
+    private final PaymentService paymentService;
+
     @Autowired
-    PaymentService paymentService;
+    public PaymentControllerImpl(PaymentService paymentService) {
+        this.paymentService = paymentService;
+    }
 
     @Override
     public  ResponseEntity<PaymentResp> cardPayment(CardPaymentReq cardPaymentReq) {
-        return this.paymentService.doPayment(cardPaymentReq);
+        return this.paymentService.doPayment(cardPaymentReq, ManagersEnum.CardManager);
     }
 
     @Override
     public ResponseEntity<PaymentResp> p2pPayment(P2pPaymentReq p2pPaymentReq) {
-        return this.paymentService.doPayment(p2pPaymentReq);
+        return this.paymentService.doPayment(p2pPaymentReq, ManagersEnum.P2pManager);
     }
 
     @Override
     public ResponseEntity<PaymentResp> transferPayment(TransferPaymentReq transferPaymentReq) {
-        return this.paymentService.doPayment(transferPaymentReq);
+        return this.paymentService.doPayment(transferPaymentReq, ManagersEnum.TransferManager);
     }
 
 

@@ -7,21 +7,29 @@ import com.linchi.payments.paymentsapi.entitys.enums.PaymentStatusEnum;
 import com.linchi.payments.paymentsapi.repository.P2pRepository;
 import com.linchi.payments.paymentsapi.service.Authorizers.PaymentAuthService;
 import com.linchi.payments.paymentsapi.service.managers.PaymentManagerService;
-import com.linchi.payments.paymentsapi.service.support.AuthServiceFactory;
-import com.linchi.payments.paymentsapi.service.support.BussinesResultEnum;
-import com.linchi.payments.paymentsapi.service.support.Mappers;
+import com.linchi.payments.paymentsapi.service.support.*;
 
+import com.linchi.payments.paymentsapi.service.support.enums.AuthsEnum;
+import com.linchi.payments.paymentsapi.service.support.enums.BussinesResultEnum;
+import com.linchi.payments.paymentsapi.service.support.enums.ManagersEnum;
+import com.linchi.payments.paymentsapi.service.support.factorys.AuthServiceFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class P2pPaymentServiceImpl implements PaymentManagerService {
 
-    @Autowired
-    P2pRepository p2pRepository;
+
+    private final P2pRepository p2pRepository;
+    private final AuthServiceFactory authServiceFactory;
 
     @Autowired
-    private AuthServiceFactory authServiceFactory;
+    public P2pPaymentServiceImpl(P2pRepository p2pRepository, AuthServiceFactory authServiceFactory) {
+        this.p2pRepository = p2pRepository;
+        this.authServiceFactory = authServiceFactory;
+    }
 
     @Override
     public PaymentResp processPayment(PaymentReq paymentReq) {
@@ -30,7 +38,7 @@ public class P2pPaymentServiceImpl implements PaymentManagerService {
 
         PaymentAuthService paymentAuthService =
                 this.authServiceFactory
-                        .getPaymentAuthService("P2P");
+                        .getPaymentAuthService(AuthsEnum.P2P);
 
         if (paymentAuthService == null) {
             return Mappers.mapPayReqToPayResp(
@@ -44,8 +52,14 @@ public class P2pPaymentServiceImpl implements PaymentManagerService {
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public void saveTransaction(PaymentReq paymentReq) {
         this.p2pRepository.save(Mappers.mapP2pPayReqToP2pEntity(paymentReq));
 
+    }
+
+    @Override
+    public ManagersEnum getManager() {
+        return ManagersEnum.P2pManager;
     }
 }

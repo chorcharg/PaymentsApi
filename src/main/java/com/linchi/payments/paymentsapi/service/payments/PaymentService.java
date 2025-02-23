@@ -6,8 +6,7 @@ import com.linchi.payments.paymentsapi.dto.request.PaymentStatusReq;
 import com.linchi.payments.paymentsapi.dto.response.PaymentListResp;
 import com.linchi.payments.paymentsapi.dto.response.PaymentResp;
 
-import com.linchi.payments.paymentsapi.entitys.Payment;
-import org.springframework.data.domain.Page;
+import com.linchi.payments.paymentsapi.service.support.enums.ManagersEnum;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
@@ -17,7 +16,7 @@ import java.util.List;
 
 public interface PaymentService {
 
-    public ResponseEntity<PaymentResp> doPayment(PaymentReq paymentReq);
+    public ResponseEntity<PaymentResp> doPayment(PaymentReq paymentReq, ManagersEnum manager);
 
     public ResponseEntity<PaymentResp> getPayment(PaymentStatusReq paymentStatusReq);
 

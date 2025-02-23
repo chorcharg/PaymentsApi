@@ -6,8 +6,8 @@ import com.linchi.payments.paymentsapi.dto.response.PaymentResp;
 import com.linchi.payments.paymentsapi.entitys.enums.PaymentStatusEnum;
 import com.linchi.payments.paymentsapi.service.Authorizers.PaymentAuthService;
 
-import com.linchi.payments.paymentsapi.service.Authorizers.support.AuthsEnum;
-import com.linchi.payments.paymentsapi.service.support.BussinesResultEnum;
+import com.linchi.payments.paymentsapi.service.support.enums.AuthsEnum;
+import com.linchi.payments.paymentsapi.service.support.enums.BussinesResultEnum;
 import com.linchi.payments.paymentsapi.service.support.Mappers;
 import org.springframework.stereotype.Service;
 

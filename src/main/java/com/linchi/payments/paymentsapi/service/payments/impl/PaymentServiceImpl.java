@@ -1,26 +1,23 @@
 package com.linchi.payments.paymentsapi.service.payments.impl;
-
-
 import com.linchi.payments.paymentsapi.dto.request.PaymentListReq;
 import com.linchi.payments.paymentsapi.dto.request.PaymentReq;
 import com.linchi.payments.paymentsapi.dto.request.PaymentStatusReq;
-
 import com.linchi.payments.paymentsapi.dto.response.PaymentListResp;
 import com.linchi.payments.paymentsapi.dto.response.PaymentResp;
 import com.linchi.payments.paymentsapi.entitys.Payment;
 import com.linchi.payments.paymentsapi.entitys.PaymentIntent;
-import com.linchi.payments.paymentsapi.entitys.enums.CurrencyEnum;
 import com.linchi.payments.paymentsapi.entitys.enums.PaymentStatusEnum;
 import com.linchi.payments.paymentsapi.excpetions.BusinessException;
 import com.linchi.payments.paymentsapi.excpetions.PaymentsNotFoundException;
-import com.linchi.payments.paymentsapi.service.support.BussinesResultEnum;
+import com.linchi.payments.paymentsapi.service.support.*;
 import com.linchi.payments.paymentsapi.repository.PaymentRepository;
 import com.linchi.payments.paymentsapi.service.managers.PaymentManagerService;
 import com.linchi.payments.paymentsapi.service.payments.PaymentService;
-import com.linchi.payments.paymentsapi.service.support.ManagerFactory;
-import com.linchi.payments.paymentsapi.service.support.Mappers;
 
-import com.linchi.payments.paymentsapi.service.support.MonExt;
+import com.linchi.payments.paymentsapi.service.support.enums.BussinesResultEnum;
+import com.linchi.payments.paymentsapi.service.support.enums.CurrencyEnum;
+import com.linchi.payments.paymentsapi.service.support.enums.ManagersEnum;
+import com.linchi.payments.paymentsapi.service.support.factorys.ManagerFactory;
 import jakarta.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,18 +39,25 @@ import java.util.stream.Collectors;
 @Service
 public class PaymentServiceImpl implements PaymentService {
 
+
+    private final PaymentRepository paymentRepository;
+    private final ManagerFactory managerFactory;
+
     @Autowired
-    PaymentRepository paymentRepository;
-    @Autowired
-    ManagerFactory managerFactory;
+    public PaymentServiceImpl(PaymentRepository paymentRepository, ManagerFactory managerFactory) {
+        this.paymentRepository = paymentRepository;
+        this.managerFactory = managerFactory;
+    }
+
 
     @Override
-    public ResponseEntity<PaymentResp> doPayment(PaymentReq paymentReq) {
+    public ResponseEntity<PaymentResp> doPayment(PaymentReq paymentReq, ManagersEnum manager) {
 
         //vamos al factory para elegir el manager de pago
-        PaymentManagerService payManager = managerFactory.getPaymentMethod(paymentReq);
+        PaymentManagerService payManager = managerFactory.getPaymentMethod(manager);
 
         Payment payment = this.startPayment(paymentReq, payManager);
+
         PaymentResp paymentResp = this.callManager(payManager, paymentReq);
 
         this.finish(payment, paymentResp);
@@ -66,9 +70,11 @@ public class PaymentServiceImpl implements PaymentService {
     public Payment startPayment(PaymentReq paymentReq, PaymentManagerService payManager) {
 
         Payment payment = Mappers.mapPayReqToPayEntity(paymentReq);
-        MonExt monExt = MonExt.valueOf(payment.getCurrency().toString());
+
         payment.setLocalAmount(
-                monExt.rateToArs(payment.getAmount())
+                payment
+                        .getCurrency()
+                        .rateToArs(payment.getAmount())
         );
 
         if (paymentRepository.findByPaymentIntent(payment.getPaymentIntent()).isPresent()) {
@@ -87,7 +93,6 @@ public class PaymentServiceImpl implements PaymentService {
     private PaymentResp callManager(PaymentManagerService payManager, PaymentReq paymentReq) {
 
         PaymentResp paymentResp = payManager.processPayment(paymentReq);
-
 
         return paymentResp;
     }
@@ -146,8 +151,8 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public List<String> getCurrency() {
-        return Arrays.stream(MonExt.values())
-                .map(monExt -> monExt.name() + ": " + monExt.getRate())
+        return Arrays.stream(CurrencyEnum.values())
+                .map(currencyEnum -> currencyEnum.name() + ": " + currencyEnum.getRate())
                 .collect(Collectors.toList());
     }
 }

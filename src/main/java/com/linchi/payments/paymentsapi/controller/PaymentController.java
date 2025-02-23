@@ -3,10 +3,9 @@ package com.linchi.payments.paymentsapi.controller;
 import com.linchi.payments.paymentsapi.dto.request.*;
 import com.linchi.payments.paymentsapi.dto.response.PaymentListResp;
 import com.linchi.payments.paymentsapi.dto.response.PaymentResp;
-import com.linchi.payments.paymentsapi.dto.response.PaymentStatusResp;
 
 import com.linchi.payments.paymentsapi.entitys.Payment;
-import com.linchi.payments.paymentsapi.entitys.enums.CurrencyEnum;
+
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;

@@ -1,6 +1,6 @@
 package com.linchi.payments.paymentsapi.entitys;
 
-import com.linchi.payments.paymentsapi.entitys.enums.CurrencyEnum;
+import com.linchi.payments.paymentsapi.service.support.enums.CurrencyEnum;
 import com.linchi.payments.paymentsapi.entitys.enums.PaymentStatusEnum;
 
 import jakarta.persistence.Entity;
