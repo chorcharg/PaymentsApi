@@ -1,8 +1,10 @@
 package com.linchi.payments.paymentsapi.service.managers;
 
+import com.linchi.payments.paymentsapi.dto.PaymentDTO;
 import com.linchi.payments.paymentsapi.dto.request.PaymentReq;
-import com.linchi.payments.paymentsapi.dto.response.PaymentResp;
 
+
+import com.linchi.payments.paymentsapi.entitys.MethodBase;
 import com.linchi.payments.paymentsapi.service.support.enums.ManagersEnum;
 
 //reglas de negocio por tipo de pago.
@@ -10,10 +12,12 @@ import com.linchi.payments.paymentsapi.service.support.enums.ManagersEnum;
 
 public interface PaymentManagerService {
 
-    public PaymentResp processPayment(PaymentReq paymentReq);
+    void processPayment(PaymentDTO paymentDTO);
 
-    public void saveTransaction(PaymentReq paymentReq);
+    void saveTransaction(PaymentDTO paymentDTO);
 
-    public ManagersEnum getManager();
+    ManagersEnum getManager();
+
+    MethodBase getMethod(PaymentReq paymentReq);
 
 }

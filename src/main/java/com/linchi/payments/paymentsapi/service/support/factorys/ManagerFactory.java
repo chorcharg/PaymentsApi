@@ -1,5 +1,7 @@
 package com.linchi.payments.paymentsapi.service.support.factorys;
 
+
+import com.linchi.payments.paymentsapi.excpetions.FactoryException;
 import com.linchi.payments.paymentsapi.service.managers.PaymentManagerService;
 
 import com.linchi.payments.paymentsapi.service.support.enums.ManagersEnum;
@@ -28,7 +30,7 @@ public class ManagerFactory {
                         paymentManagerService -> paymentManagerService.getManager() == manager
                 )
                 .findFirst()
-                .orElse(null);
+                .orElseThrow(() -> new FactoryException(this.getClass().toString()));
 
     }
 

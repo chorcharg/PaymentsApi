@@ -1,23 +1,31 @@
 package com.linchi.payments.paymentsapi.service.Authorizers.impl;
 
-import com.linchi.payments.paymentsapi.dto.request.P2pPaymentReq;
-import com.linchi.payments.paymentsapi.dto.request.PaymentReq;
-import com.linchi.payments.paymentsapi.dto.response.PaymentResp;
+import com.linchi.payments.paymentsapi.dto.PaymentDTO;
+import com.linchi.payments.paymentsapi.entitys.P2pPayment;
 import com.linchi.payments.paymentsapi.entitys.enums.PaymentStatusEnum;
+import com.linchi.payments.paymentsapi.excpetions.BusinessException;
 import com.linchi.payments.paymentsapi.service.Authorizers.PaymentAuthService;
 
 import com.linchi.payments.paymentsapi.service.support.enums.AuthsEnum;
-import com.linchi.payments.paymentsapi.service.support.enums.BussinesResultEnum;
-import com.linchi.payments.paymentsapi.service.support.Mappers;
+import com.linchi.payments.paymentsapi.service.support.enums.ResultEnum;
 import org.springframework.stereotype.Service;
 
 @Service
 public class P2pAuthMeliServiceImpl implements PaymentAuthService {
 
     @Override
-    public PaymentResp doPayment(PaymentReq paymentReq) {
+    public void doPayment(PaymentDTO paymentDTO) {
 
-        P2pPaymentReq p2pPaymentReq = (P2pPaymentReq)paymentReq;
+        P2pPayment p2pPayment = (P2pPayment) paymentDTO.getMethod();
+
+        if(p2pPayment.getSenderId()==123){
+            paymentDTO.getPayment().setStatus(PaymentStatusEnum.REJECTED);
+            paymentDTO.setResult(ResultEnum.INVALID_USER);
+            paymentDTO.getPayment().setDescription(ResultEnum.INVALID_USER.getDescription());
+            throw new BusinessException(ResultEnum.INVALID_USER);
+        }
+
+/*        P2pPaymentReq p2pPaymentReq = (P2pPaymentReq)paymentReq;
 
         if(p2pPaymentReq.getSenderId() == 123){
             return Mappers.mapPayReqToPayResp(
@@ -32,6 +40,11 @@ public class P2pAuthMeliServiceImpl implements PaymentAuthService {
                 PaymentStatusEnum.APPROVED,
                 BussinesResultEnum.OK.getDescription()
         );
+        */
+
+        //suponemos que llamamos y salio todo bien
+        paymentDTO.getPayment().setStatus(PaymentStatusEnum.APPROVED);
+        paymentDTO.setResult(ResultEnum.OK);
     }
 
     @Override

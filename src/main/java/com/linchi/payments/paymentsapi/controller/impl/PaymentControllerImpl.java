@@ -5,6 +5,7 @@ import com.linchi.payments.paymentsapi.dto.request.*;
 import com.linchi.payments.paymentsapi.dto.response.PaymentListResp;
 import com.linchi.payments.paymentsapi.dto.response.PaymentResp;
 
+import com.linchi.payments.paymentsapi.entitys.Payment;
 import com.linchi.payments.paymentsapi.service.payments.PaymentService;
 
 import com.linchi.payments.paymentsapi.service.support.enums.ManagersEnum;
@@ -29,34 +30,34 @@ public class PaymentControllerImpl implements PaymentController {
 
     @Override
     public  ResponseEntity<PaymentResp> cardPayment(CardPaymentReq cardPaymentReq) {
-        return this.paymentService.doPayment(cardPaymentReq, ManagersEnum.CardManager);
+        return this.paymentService.doPayment(cardPaymentReq, ManagersEnum.DEBIT_CARD);
     }
 
     @Override
     public ResponseEntity<PaymentResp> p2pPayment(P2pPaymentReq p2pPaymentReq) {
-        return this.paymentService.doPayment(p2pPaymentReq, ManagersEnum.P2pManager);
+        return this.paymentService.doPayment(p2pPaymentReq, ManagersEnum.P2P);
     }
 
     @Override
     public ResponseEntity<PaymentResp> transferPayment(TransferPaymentReq transferPaymentReq) {
-        return this.paymentService.doPayment(transferPaymentReq, ManagersEnum.TransferManager);
+        return this.paymentService.doPayment(transferPaymentReq, ManagersEnum.TRANSFER);
     }
 
 
     @Override
     public PaymentListResp paymentsList(PaymentListReq paymentListReq) {
-        PaymentListResp payments = paymentService.getPaymentsList(paymentListReq);
-        return payments;
+
+        return paymentService.getPaymentsList(paymentListReq);
     }
 
     @Override
-    public ResponseEntity<PaymentResp> paymentStatus(PaymentStatusReq paymentStatusReq) {
+    public ResponseEntity<Payment> paymentStatus(PaymentStatusReq paymentStatusReq) {
         return paymentService.getPayment(paymentStatusReq);
     }
 
     @Override
     public ResponseEntity<String> health(){
-        return new ResponseEntity<String>(
+        return new ResponseEntity<>(
                 "OK",
                 HttpStatus.OK
         );
