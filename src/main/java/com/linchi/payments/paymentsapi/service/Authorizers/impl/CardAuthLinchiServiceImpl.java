@@ -1,13 +1,12 @@
 package com.linchi.payments.paymentsapi.service.Authorizers.impl;
 
-import com.linchi.payments.paymentsapi.dto.request.CardPaymentReq;
-import com.linchi.payments.paymentsapi.dto.request.PaymentReq;
-import com.linchi.payments.paymentsapi.dto.response.PaymentResp;
+import com.linchi.payments.paymentsapi.dto.PaymentDTO;
+import com.linchi.payments.paymentsapi.entitys.CardPayment;
 import com.linchi.payments.paymentsapi.entitys.enums.PaymentStatusEnum;
+import com.linchi.payments.paymentsapi.excpetions.BusinessException;
 import com.linchi.payments.paymentsapi.service.support.enums.AuthsEnum;
-import com.linchi.payments.paymentsapi.service.support.enums.BussinesResultEnum;
+import com.linchi.payments.paymentsapi.service.support.enums.ResultEnum;
 import com.linchi.payments.paymentsapi.service.Authorizers.PaymentAuthService;
-import com.linchi.payments.paymentsapi.service.support.Mappers;
 
 import org.springframework.stereotype.Service;
 
@@ -15,39 +14,39 @@ import org.springframework.stereotype.Service;
 public class CardAuthLinchiServiceImpl implements PaymentAuthService {
 
     @Override
-    public PaymentResp doPayment(PaymentReq paymentReq) {
+    public void doPayment(PaymentDTO paymentDTO) {
 
-        CardPaymentReq cardPaymentReq = (CardPaymentReq)paymentReq;
+        //simulamos llamadas al provedoor de autorizacion
 
+        //aprovechamos CardPayment, pero en este punto
+        // ya estariamos mapeando un request body segun interfaz del proveedor
 
-        if(cardPaymentReq.getAmount() > 10000){
-            return Mappers.mapPayReqToPayResp(
-                    paymentReq,
-                    PaymentStatusEnum.REJECTED,
-                    BussinesResultEnum.INSUFFICIENT_BALANCE.getDescription()
-            );
+        CardPayment cardPayment = (CardPayment) paymentDTO.getMethod();
 
-          //  throw new BusinessException(BussinesResultEnum.INSUFFICIENT_BALANCE, paymentReq);
+        //tarjeta invalida
+        if(cardPayment.getCardNumber().equals("321")){
+
+            paymentDTO.getPayment().setStatus(PaymentStatusEnum.REJECTED);
+            paymentDTO.setResult(ResultEnum.INVALID_CARD);
+            paymentDTO.getPayment().setDescription(ResultEnum.INVALID_CARD.getDescription());
+            throw new BusinessException(ResultEnum.INVALID_CARD);
         }
 
-        if(cardPaymentReq.getCardNumber().equals("123")){
-
-            return Mappers.mapPayReqToPayResp(
-                    paymentReq,
-                    PaymentStatusEnum.ERROR,
-                    BussinesResultEnum.INVALID_CARD.getDescription()
-            );
-
-          //  throw new BusinessException(BussinesResultEnum.INVALID_CARD, paymentReq);
+        //suponemos que este proveedor trabaja con el importe y moneda original
+        //le enviamos la moneda en el request e importe orginial
+        //saldo insuficiente
+        if(paymentDTO.getPayment().getAmount() >100000){
+            paymentDTO.getPayment().setStatus(PaymentStatusEnum.REJECTED);
+            paymentDTO.getPayment().setDescription(ResultEnum.INSUFFICIENT_BALANCE.getDescription());
+            paymentDTO.setResult(ResultEnum.INSUFFICIENT_BALANCE);
+            throw new BusinessException(ResultEnum.INSUFFICIENT_BALANCE);
         }
 
-        return Mappers.mapPayReqToPayResp(
-                        paymentReq,
-                        PaymentStatusEnum.APPROVED,
-                        BussinesResultEnum.OK.getDescription()
-        );
-
+        //suponemos que llamamos y salio todo bien
+        paymentDTO.getPayment().setStatus(PaymentStatusEnum.APPROVED);
+        paymentDTO.setResult(ResultEnum.OK);
     }
+
 
     @Override
     public AuthsEnum getAuth() {

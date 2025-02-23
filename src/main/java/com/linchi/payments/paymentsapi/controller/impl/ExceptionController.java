@@ -1,15 +1,17 @@
 package com.linchi.payments.paymentsapi.controller.impl;
 
-import com.linchi.payments.paymentsapi.dto.response.ExceptionDTO;
-import com.linchi.payments.paymentsapi.dto.request.PaymentReq;
-import com.linchi.payments.paymentsapi.dto.request.PaymentStatusReq;
+import com.linchi.payments.paymentsapi.dto.ExceptionDTO;
+
+import com.linchi.payments.paymentsapi.dto.response.PaymentResp;
 import com.linchi.payments.paymentsapi.excpetions.BusinessException;
+import com.linchi.payments.paymentsapi.excpetions.DuplicatePayException;
 import com.linchi.payments.paymentsapi.excpetions.FactoryException;
 
 import com.linchi.payments.paymentsapi.excpetions.PaymentsNotFoundException;
-import com.linchi.payments.paymentsapi.service.support.enums.BussinesResultEnum;
+import com.linchi.payments.paymentsapi.service.support.enums.ResultEnum;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageConversionException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,37 +38,55 @@ public class ExceptionController {
                     .collect(Collectors.toSet());
     }
 
+    @ExceptionHandler(HttpMessageConversionException.class)
+    public ResponseEntity<ExceptionDTO> HttpMessageConversionExceptionHandler(HttpMessageConversionException ex) {
+        ExceptionDTO  exception = new ExceptionDTO();
+        exception.setCode(ResultEnum.DATA_CONVERT_ERROR.getCode());
+        exception.setMessage( ResultEnum.DATA_CONVERT_ERROR.getDescription() +": " + ex.getMessage());
+
+        return new ResponseEntity<>(exception, HttpStatus.FORBIDDEN);
+    }
+
     @ExceptionHandler(BusinessException.class)
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<ExceptionDTO<PaymentReq>> BussinesExceptionHandler(BusinessException ex) {
-        ExceptionDTO exception =
-                ExceptionDTO.builder()
-                .code(ex.getException().getCode())
-                .message(ex.getMessage())
-                .request(ex.getPaymentReq())
-                .build();
-        return new ResponseEntity<ExceptionDTO<PaymentReq>>(exception, HttpStatus.OK);
+    public ResponseEntity<PaymentResp> BussinesExceptionHandler(BusinessException ex) {
+        PaymentResp paymentResp  = new PaymentResp();
+        paymentResp.setResult(ex.getResult());
+        paymentResp.setResultDescription(ex.getResult().getDescription());
+
+        return new ResponseEntity<>(paymentResp, HttpStatus.OK);
+    }
+
+    @ExceptionHandler(DuplicatePayException.class)
+
+    public ResponseEntity<ExceptionDTO> DuplicatePayExceptionHandler(DuplicatePayException ex) {
+        ExceptionDTO exception = new ExceptionDTO();
+        exception.setCode(
+                ex.getResult().getCode()
+        );
+        exception.setMessage(
+                ex.getResult().getDescription()
+        );
+
+        return new ResponseEntity<>(exception, HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(FactoryException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ResponseEntity<ExceptionDTO<PaymentReq>> FactoryExceptionHandler(FactoryException ex) {
+    public ResponseEntity<ExceptionDTO> FactoryExceptionHandler(FactoryException ignored) {
         ExceptionDTO exception =
                 ExceptionDTO.builder()
-                        .request(ex.getPaymentReq())
+                        .code("999")
+                        .message("No se puede realizar la operacion")
                         .build();
-        return new ResponseEntity<ExceptionDTO<PaymentReq>>(exception, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(exception, HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(PaymentsNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ResponseEntity<ExceptionDTO<PaymentStatusReq>> PaymentsNotFoundExceptionHandler(PaymentsNotFoundException ex) {
+    public ResponseEntity<ExceptionDTO> PaymentsNotFoundExceptionHandler(PaymentsNotFoundException ignored) {
         ExceptionDTO exception =
                 ExceptionDTO.builder()
-                        .request(ex.getPaymentStatusReq())
-                        .code(BussinesResultEnum.PAYMENT_NOT_FOUND.getCode())
-                        .message(BussinesResultEnum.PAYMENT_NOT_FOUND.getDescription())
+                        .code(ResultEnum.PAYMENT_NOT_FOUND.getCode())
+                        .message(ResultEnum.PAYMENT_NOT_FOUND.getDescription())
                         .build();
-        return new ResponseEntity<ExceptionDTO<PaymentStatusReq>>(exception, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(exception, HttpStatus.NOT_FOUND);
     }
 }

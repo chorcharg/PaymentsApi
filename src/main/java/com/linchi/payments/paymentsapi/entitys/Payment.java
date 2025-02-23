@@ -3,6 +3,7 @@ package com.linchi.payments.paymentsapi.entitys;
 import com.linchi.payments.paymentsapi.service.support.enums.CurrencyEnum;
 import com.linchi.payments.paymentsapi.entitys.enums.PaymentStatusEnum;
 
+import com.linchi.payments.paymentsapi.service.support.enums.ManagersEnum;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.EnumType;
@@ -41,5 +42,7 @@ public class Payment {
     private Timestamp createdAt;
 
     private String description;
+
+    private ManagersEnum method;
 
 }
