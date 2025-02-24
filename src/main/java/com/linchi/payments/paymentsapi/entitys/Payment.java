@@ -43,6 +43,7 @@ public class Payment {
 
     private String description;
 
+    @Enumerated(EnumType.STRING)
     private ManagersEnum method;
 
 }
