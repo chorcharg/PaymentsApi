@@ -4,9 +4,9 @@ import com.linchi.payments.paymentsapi.dto.request.CardPaymentReq;
 import com.linchi.payments.paymentsapi.dto.request.P2pPaymentReq;
 import com.linchi.payments.paymentsapi.dto.request.PaymentReq;
 import com.linchi.payments.paymentsapi.dto.request.TransferPaymentReq;
-import com.linchi.payments.paymentsapi.dto.response.PaymentResp;
+
 import com.linchi.payments.paymentsapi.entitys.*;
-import com.linchi.payments.paymentsapi.entitys.enums.PaymentStatusEnum;
+
 
 public final class Mappers {
     public static Payment mapPayReqToPayEntity(PaymentReq paymentReq) {
@@ -21,75 +21,55 @@ public final class Mappers {
         return payment;
     }
 
-    public static PaymentResp mapPayReqToPayResp(PaymentReq paymentReq, PaymentStatusEnum status, String statusDescription) {
+    public static P2pPayment mapPayReqToP2pEntity(P2pPaymentReq paymentReq) {
+        P2pPayment p2pPayment = new P2pPayment();
+        p2pPayment.setSenderId(paymentReq.getSenderId());
+        p2pPayment.setReceiverId(paymentReq.getReceiverId());
+        p2pPayment.setNote(paymentReq.getNote());
 
-        return  PaymentResp.builder()
-                .paymentReq(paymentReq)
-                .status(status)
-                .statusDescription(statusDescription)
-                .build();
+        p2pPayment.setPaymentId(
+                PaymentIntent
+                        .builder()
+                        .commerceId(paymentReq.getCommerceId())
+                        .payIntentionId(paymentReq.getPayIntentionId())
+                        .build()
+        );
+
+        return p2pPayment;
     }
 
-    public static CardPayment mapCardPayReqToCardEntity(PaymentReq paymentReq) {
-        CardPaymentReq cardPaymentReq = (CardPaymentReq) paymentReq;
-        return CardPayment
-                .builder()
-                .paymentId(PaymentIntent
+    public static CardPayment mapPayReqToCardEntity(CardPaymentReq paymentReq) {
+        CardPayment cardPayment = new CardPayment();
+            cardPayment.setAuthorizer(paymentReq.getAuthorizer());
+            cardPayment.setCardNumber(paymentReq.getCardNumber());
+            cardPayment.setPaymentId(
+                    PaymentIntent
                             .builder()
                             .commerceId(paymentReq.getCommerceId())
                             .payIntentionId(paymentReq.getPayIntentionId())
-                            .build())
-                .cardNumber(cardPaymentReq.getCardNumber())
-                .authorizer(cardPaymentReq.getAuthorizer())
-                .build();
+                            .build()
+                    );
+
+        return cardPayment;
     }
 
-    public static P2pPayment mapP2pPayReqToP2pEntity(PaymentReq paymentReq) {
-        P2pPaymentReq p2pPaymentReq = (P2pPaymentReq) paymentReq;
-
-        return P2pPayment
-                .builder()
-                .paymentId(PaymentIntent
+    public static TransferPayment mapPayReqToTransferEntity(TransferPaymentReq paymentReq) {
+        TransferPayment transferPayment = new TransferPayment();
+        transferPayment.setUserId(paymentReq.getUserId());
+        transferPayment.setBankCode(paymentReq.getBankCode());
+        transferPayment.setToAcct(paymentReq.getToAcct());
+        transferPayment.setPaymentId(
+                PaymentIntent
                         .builder()
                         .commerceId(paymentReq.getCommerceId())
                         .payIntentionId(paymentReq.getPayIntentionId())
-                        .build())
-                .senderId(p2pPaymentReq.getSenderId())
-                .receiverId(p2pPaymentReq.getReceiverId())
-                .note(p2pPaymentReq.getNote())
+                        .build()
+        );
 
-                .build();
 
+        return transferPayment;
     }
 
-    public static TransferPayment mapTransfPayReqToTransfEntity(PaymentReq paymentReq) {
-        TransferPaymentReq transferPaymentReq = (TransferPaymentReq) paymentReq;
-
-        return TransferPayment
-                .builder()
-                .paymentId(PaymentIntent
-                        .builder()
-                        .commerceId(paymentReq.getCommerceId())
-                        .payIntentionId(paymentReq.getPayIntentionId())
-                        .build())
-                .userId(transferPaymentReq.getUserId())
-                .bankCode(transferPaymentReq.getBankCode())
-                .toAcct(transferPaymentReq.getToAcct())
-                .build();
-
-
-    }
-
-    public static PaymentReq mapPayEntityToPaymentReq(Payment payment) {
-        return PaymentReq
-                .builder()
-                .amount(payment.getAmount())
-                .currency(payment.getCurrency())
-                .commerceId(payment.getPaymentIntent().getCommerceId())
-                .payIntentionId(payment.getPaymentIntent().getPayIntentionId())
-                .build();
-
-    }
 
 }
 

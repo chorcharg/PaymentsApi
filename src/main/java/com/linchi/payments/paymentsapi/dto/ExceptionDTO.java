@@ -1,16 +1,17 @@
-package com.linchi.payments.paymentsapi.dto.response;
+package com.linchi.payments.paymentsapi.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
 @AllArgsConstructor
-public class ExceptionDTO <T>{
+@NoArgsConstructor
+public class ExceptionDTO{
 
     private String code;
     private String message;
-    private T request;
 
 }

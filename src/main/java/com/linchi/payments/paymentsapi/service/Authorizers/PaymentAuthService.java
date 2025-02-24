@@ -1,7 +1,6 @@
 package com.linchi.payments.paymentsapi.service.Authorizers;
 
-import com.linchi.payments.paymentsapi.dto.request.PaymentReq;
-import com.linchi.payments.paymentsapi.dto.response.PaymentResp;
+import com.linchi.payments.paymentsapi.dto.PaymentDTO;
 import com.linchi.payments.paymentsapi.service.support.enums.AuthsEnum;
 
 //reglas de negocio del autorizador
@@ -10,11 +9,11 @@ import com.linchi.payments.paymentsapi.service.support.enums.AuthsEnum;
 
 public interface PaymentAuthService {
 
-    public PaymentResp doPayment(PaymentReq paymentReq);
+    void doPayment(PaymentDTO paymentDTO);
 
-    public AuthsEnum getAuth();
+    AuthsEnum getAuth();
 
-    public default void reverse(){
+    default void reverse(){
         throw new UnsupportedOperationException();
     }
 

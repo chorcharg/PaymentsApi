@@ -7,12 +7,11 @@ import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class BusinessException extends RuntimeException{
+public class DuplicatePayException extends RuntimeException {
 
     private final ResultEnum result;
 
-
-    public BusinessException(ResultEnum result) {
+    public DuplicatePayException(ResultEnum result) {
 
         this.result = result;
     }
