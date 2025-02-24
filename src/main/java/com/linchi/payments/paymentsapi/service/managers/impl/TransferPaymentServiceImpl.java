@@ -45,7 +45,7 @@ public class TransferPaymentServiceImpl implements PaymentManagerService {
                 );
 
             if(paymentAuthService == null) {
-                paymentDTO.getPayment().setStatus(PaymentStatusEnum.ERROR);
+                paymentDTO.getPayment().setStatus(PaymentStatusEnum.FAILED);
                 paymentDTO.setResult(ResultEnum.INVALID_AUTHORIZER);
                 throw new FactoryException(
                         this.getClass().toString()
