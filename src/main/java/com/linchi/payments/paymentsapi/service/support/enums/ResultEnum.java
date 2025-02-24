@@ -12,7 +12,7 @@ public enum ResultEnum {
     INVALID_CARD("013","Tarjeta Invalida", HttpStatus.OK),
     PAYMENT_NOT_FOUND("014","El identificador de pago no existe", HttpStatus.NOT_FOUND),
 
-
+    INVALID_FIELDS("015","Atributo inexistente para ordenar la consulta", HttpStatus.BAD_REQUEST),
     PAYMENT_EXISTS("106","El ID de intencion de pago ya existe", HttpStatus.FORBIDDEN),
     INVALID_AUTHORIZER("101","Sin proveedor de autorizacion", HttpStatus.FORBIDDEN),
     INVALID_PAY_METHOD("102","Sin proveedor de autorizacion", HttpStatus.FORBIDDEN),

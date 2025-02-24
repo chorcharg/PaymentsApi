@@ -3,11 +3,8 @@ package com.linchi.payments.paymentsapi.controller.impl;
 import com.linchi.payments.paymentsapi.dto.ExceptionDTO;
 
 import com.linchi.payments.paymentsapi.dto.response.PaymentResp;
-import com.linchi.payments.paymentsapi.excpetions.BusinessException;
-import com.linchi.payments.paymentsapi.excpetions.DuplicatePayException;
-import com.linchi.payments.paymentsapi.excpetions.FactoryException;
+import com.linchi.payments.paymentsapi.excpetions.*;
 
-import com.linchi.payments.paymentsapi.excpetions.PaymentsNotFoundException;
 import com.linchi.payments.paymentsapi.service.support.enums.ResultEnum;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -89,4 +86,22 @@ public class ExceptionController {
                         .build();
         return new ResponseEntity<>(exception, HttpStatus.NOT_FOUND);
     }
+
+
+    @ExceptionHandler(InvalidFindFieldException.class)
+    public ResponseEntity<ExceptionDTO> InvalidFindFieldExceptionHandler(InvalidFindFieldException e) {
+        ExceptionDTO exception =
+                ExceptionDTO.builder()
+                        .code(ResultEnum.INVALID_FIELDS.getCode())
+                        .message(
+                                ResultEnum.INVALID_FIELDS.getDescription()+
+                                e.getMessage()
+                        )
+                        .build();
+        return new ResponseEntity<>(exception, HttpStatus.NOT_FOUND);
+    }
+
+
+
+
 }
