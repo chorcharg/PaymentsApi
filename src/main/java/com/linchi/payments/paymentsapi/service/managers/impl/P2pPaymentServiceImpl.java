@@ -5,15 +5,15 @@ import com.linchi.payments.paymentsapi.dto.request.P2pPaymentReq;
 import com.linchi.payments.paymentsapi.dto.request.PaymentReq;
 import com.linchi.payments.paymentsapi.entitys.MethodBase;
 import com.linchi.payments.paymentsapi.entitys.P2pPayment;
-import com.linchi.payments.paymentsapi.entitys.enums.PaymentStatusEnum;
 import com.linchi.payments.paymentsapi.excpetions.FactoryException;
 import com.linchi.payments.paymentsapi.repository.P2pRepository;
-import com.linchi.payments.paymentsapi.service.Authorizers.PaymentAuthService;
+import com.linchi.payments.paymentsapi.service.authorizers.PaymentAuthService;
 import com.linchi.payments.paymentsapi.service.managers.PaymentManagerService;
+import com.linchi.payments.paymentsapi.service.payments.PaymentSupport;
 import com.linchi.payments.paymentsapi.service.support.Mappers;
 import com.linchi.payments.paymentsapi.service.support.enums.AuthsEnum;
 import com.linchi.payments.paymentsapi.service.support.enums.ManagersEnum;
-import com.linchi.payments.paymentsapi.service.support.enums.ResultEnum;
+import com.linchi.payments.paymentsapi.service.support.enums.BusinessResultEnum;
 import com.linchi.payments.paymentsapi.service.support.factorys.AuthServiceFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,12 +23,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class P2pPaymentServiceImpl implements PaymentManagerService {
 
-
+    private final PaymentSupport paymentSupport;
     private final P2pRepository p2pRepository;
     private final AuthServiceFactory authServiceFactory;
 
     @Autowired
-    public P2pPaymentServiceImpl(P2pRepository p2pRepository, AuthServiceFactory authServiceFactory) {
+    public P2pPaymentServiceImpl(P2pRepository p2pRepository, AuthServiceFactory authServiceFactory, PaymentSupport paymentSupport) {
+        this.paymentSupport = paymentSupport;
         this.p2pRepository = p2pRepository;
         this.authServiceFactory = authServiceFactory;
     }
@@ -43,8 +44,13 @@ public class P2pPaymentServiceImpl implements PaymentManagerService {
                 );
 
         if(paymentAuthService == null) {
-            paymentDTO.getPayment().setStatus(PaymentStatusEnum.FAILED);
-            paymentDTO.setResult(ResultEnum.INVALID_AUTHORIZER);
+            this.paymentSupport
+                    .updatePaymentDTO(
+                            paymentDTO,
+                            BusinessResultEnum.INVALID_AUTHORIZER
+                    );
+
+            this.paymentSupport.updatePayment(paymentDTO);
             throw new FactoryException(
                     this.getClass().toString()
 

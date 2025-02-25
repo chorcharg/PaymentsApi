@@ -21,8 +21,5 @@ public class MethodBase {
     })
     private PaymentIntent paymentId;
 
-    public MethodBase(long id, PaymentIntent paymentId) {
-        this.Id = id;
-        this.paymentId = paymentId;
-    }
+
 }

@@ -1,4 +1,4 @@
-package com.linchi.payments.paymentsapi.service.Authorizers;
+package com.linchi.payments.paymentsapi.service.authorizers;
 
 import com.linchi.payments.paymentsapi.dto.PaymentDTO;
 import com.linchi.payments.paymentsapi.service.support.enums.AuthsEnum;

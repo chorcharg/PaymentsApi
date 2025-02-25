@@ -1,16 +1,27 @@
-package com.linchi.payments.paymentsapi.service.Authorizers.impl;
+package com.linchi.payments.paymentsapi.service.authorizers.impl;
 
 import com.linchi.payments.paymentsapi.dto.PaymentDTO;
 import com.linchi.payments.paymentsapi.entitys.TransferPayment;
 import com.linchi.payments.paymentsapi.entitys.enums.PaymentStatusEnum;
 import com.linchi.payments.paymentsapi.excpetions.BusinessException;
-import com.linchi.payments.paymentsapi.service.Authorizers.PaymentAuthService;
+import com.linchi.payments.paymentsapi.service.authorizers.PaymentAuthService;
+import com.linchi.payments.paymentsapi.service.payments.PaymentSupport;
 import com.linchi.payments.paymentsapi.service.support.enums.AuthsEnum;
-import com.linchi.payments.paymentsapi.service.support.enums.ResultEnum;
+import com.linchi.payments.paymentsapi.service.support.enums.BusinessResultEnum;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class TrasnferAuthLinchiServiceImpl implements PaymentAuthService {
+
+    PaymentSupport paymentSupport;
+
+    @Autowired
+    public TrasnferAuthLinchiServiceImpl(PaymentSupport paymentSupport) {
+        this.paymentSupport = paymentSupport;
+    }
+
+
     @Override
     public void doPayment(PaymentDTO paymentDTO) {
 
@@ -18,10 +29,14 @@ public class TrasnferAuthLinchiServiceImpl implements PaymentAuthService {
 
         if(transferPayment.getBankCode().equalsIgnoreCase("PARIBAS"))
         {
-            paymentDTO.getPayment().setStatus(PaymentStatusEnum.FAILED);
-            paymentDTO.setResult(ResultEnum.INVALID_BANK_CODE);
-            paymentDTO.getPayment().setDescription(ResultEnum.INVALID_BANK_CODE.getDescription());
-            throw new BusinessException(ResultEnum.INVALID_BANK_CODE);
+            this.paymentSupport
+                    .updatePaymentDTO(
+                            paymentDTO,
+                            BusinessResultEnum.INVALID_BANK_CODE
+                    );
+
+            this.paymentSupport.updatePayment(paymentDTO);
+            throw new BusinessException(BusinessResultEnum.INVALID_BANK_CODE);
         }
 
 /*        TransferPaymentReq transferPaymentReq = (TransferPaymentReq) paymentReq;
@@ -41,7 +56,7 @@ public class TrasnferAuthLinchiServiceImpl implements PaymentAuthService {
                 BussinesResultEnum.OK.getDescription()
         );*/
         paymentDTO.getPayment().setStatus(PaymentStatusEnum.APPROVED);
-        paymentDTO.setResult(ResultEnum.OK);
+        paymentDTO.setResult(BusinessResultEnum.OK);
     }
 
     @Override

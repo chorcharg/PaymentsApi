@@ -4,7 +4,7 @@ public enum PaymentStatusEnum {
     FAILED,
     STARTED,
     APPROVED,
-    REJECTED,
-    ERROR
+    REJECTED
+
 
 }

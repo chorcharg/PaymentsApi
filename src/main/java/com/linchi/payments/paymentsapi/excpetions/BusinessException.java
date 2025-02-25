@@ -1,7 +1,7 @@
 package com.linchi.payments.paymentsapi.excpetions;
 
 
-import com.linchi.payments.paymentsapi.service.support.enums.ResultEnum;
+import com.linchi.payments.paymentsapi.service.support.enums.BusinessResultEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -9,10 +9,9 @@ import lombok.EqualsAndHashCode;
 @Data
 public class BusinessException extends RuntimeException{
 
-    private final ResultEnum result;
+    private final BusinessResultEnum result;
 
-
-    public BusinessException(ResultEnum result) {
+    public BusinessException(BusinessResultEnum result) {
 
         this.result = result;
     }
