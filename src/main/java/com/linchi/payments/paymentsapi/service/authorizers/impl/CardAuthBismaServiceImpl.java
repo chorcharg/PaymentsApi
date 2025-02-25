@@ -1,16 +1,28 @@
-package com.linchi.payments.paymentsapi.service.Authorizers.impl;
+package com.linchi.payments.paymentsapi.service.authorizers.impl;
 
 import com.linchi.payments.paymentsapi.dto.PaymentDTO;
 import com.linchi.payments.paymentsapi.entitys.CardPayment;
 import com.linchi.payments.paymentsapi.entitys.enums.PaymentStatusEnum;
 import com.linchi.payments.paymentsapi.excpetions.BusinessException;
-import com.linchi.payments.paymentsapi.service.Authorizers.PaymentAuthService;
+import com.linchi.payments.paymentsapi.service.authorizers.PaymentAuthService;
+import com.linchi.payments.paymentsapi.service.payments.PaymentSupport;
+
 import com.linchi.payments.paymentsapi.service.support.enums.AuthsEnum;
-import com.linchi.payments.paymentsapi.service.support.enums.ResultEnum;
+import com.linchi.payments.paymentsapi.service.support.enums.BusinessResultEnum;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class CardAuthBismaServiceImpl implements PaymentAuthService {
+
+
+    PaymentSupport paymentSupport;
+
+    @Autowired
+    public CardAuthBismaServiceImpl(PaymentSupport paymentSupport) {
+        this.paymentSupport = paymentSupport;
+    }
+
 
     @Override
     public void doPayment(PaymentDTO paymentDTO) {
@@ -24,27 +36,39 @@ public class CardAuthBismaServiceImpl implements PaymentAuthService {
 
         //tarjeta invalida
         if(cardPayment.getCardNumber().equals("123")){
-            paymentDTO.getPayment().setStatus(PaymentStatusEnum.REJECTED);
-            paymentDTO.setResult(ResultEnum.INVALID_CARD);
-            paymentDTO.getPayment().setDescription(ResultEnum.INVALID_CARD.getDescription());
-            throw new BusinessException(ResultEnum.INVALID_CARD);
+
+            this.paymentSupport
+                    .updatePaymentDTO(
+                            paymentDTO,
+                            BusinessResultEnum.INVALID_CARD
+                    );
+
+            this.paymentSupport.updatePayment(paymentDTO);
+
+            throw new BusinessException(BusinessResultEnum.INVALID_CARD);
 
         }
 
         //suponemos que este proveedor solo trabaja moneda local
         //enviamos el importe convertido
         //saldo insuficiente
+
         if(paymentDTO.getPayment().getLocalAmount() >100000){
-            paymentDTO.getPayment().setStatus(PaymentStatusEnum.REJECTED);
-            paymentDTO.getPayment().setDescription(ResultEnum.INSUFFICIENT_BALANCE.getDescription());
-            paymentDTO.setResult(ResultEnum.INSUFFICIENT_BALANCE);
-            throw new BusinessException(ResultEnum.INSUFFICIENT_BALANCE);
+
+            this.paymentSupport
+                    .updatePaymentDTO(
+                            paymentDTO,
+                            BusinessResultEnum.INSUFFICIENT_BALANCE
+                    );
+
+            this.paymentSupport.updatePayment(paymentDTO);
+            throw new BusinessException(BusinessResultEnum.INSUFFICIENT_BALANCE);
         }
 
 
         //suponemos que llamamos y salio todo bien
         paymentDTO.getPayment().setStatus(PaymentStatusEnum.APPROVED);
-        paymentDTO.setResult(ResultEnum.OK);
+        paymentDTO.setResult(BusinessResultEnum.OK);
     }
 
     @Override

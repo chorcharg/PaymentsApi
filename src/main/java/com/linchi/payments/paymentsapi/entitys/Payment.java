@@ -4,10 +4,7 @@ import com.linchi.payments.paymentsapi.service.support.enums.CurrencyEnum;
 import com.linchi.payments.paymentsapi.entitys.enums.PaymentStatusEnum;
 
 import com.linchi.payments.paymentsapi.service.support.enums.ManagersEnum;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EmbeddedId;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import jakarta.persistence.*;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,6 +22,7 @@ import java.sql.Timestamp;
 @Builder
 public class Payment {
 
+    @Id
     @EmbeddedId
     private PaymentIntent paymentIntent;
 

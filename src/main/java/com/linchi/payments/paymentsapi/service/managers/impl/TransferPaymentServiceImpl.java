@@ -5,16 +5,16 @@ import com.linchi.payments.paymentsapi.dto.request.PaymentReq;
 import com.linchi.payments.paymentsapi.dto.request.TransferPaymentReq;
 import com.linchi.payments.paymentsapi.entitys.MethodBase;
 import com.linchi.payments.paymentsapi.entitys.TransferPayment;
-import com.linchi.payments.paymentsapi.entitys.enums.PaymentStatusEnum;
 import com.linchi.payments.paymentsapi.excpetions.FactoryException;
 import com.linchi.payments.paymentsapi.repository.TransferRepository;
-import com.linchi.payments.paymentsapi.service.Authorizers.PaymentAuthService;
+import com.linchi.payments.paymentsapi.service.authorizers.PaymentAuthService;
 import com.linchi.payments.paymentsapi.service.managers.PaymentManagerService;
 
+import com.linchi.payments.paymentsapi.service.payments.PaymentSupport;
 import com.linchi.payments.paymentsapi.service.support.Mappers;
 import com.linchi.payments.paymentsapi.service.support.enums.AuthsEnum;
 import com.linchi.payments.paymentsapi.service.support.enums.ManagersEnum;
-import com.linchi.payments.paymentsapi.service.support.enums.ResultEnum;
+import com.linchi.payments.paymentsapi.service.support.enums.BusinessResultEnum;
 import com.linchi.payments.paymentsapi.service.support.factorys.AuthServiceFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,12 +24,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class TransferPaymentServiceImpl implements PaymentManagerService {
 
-
+    private final PaymentSupport paymentSupport;
     private final AuthServiceFactory authServiceFactory;
     private final TransferRepository transferRepository;
 
     @Autowired
-    public TransferPaymentServiceImpl(AuthServiceFactory authServiceFactory, TransferRepository transferRepository) {
+    public TransferPaymentServiceImpl(AuthServiceFactory authServiceFactory, TransferRepository transferRepository, PaymentSupport paymentSupport) {
+        this.paymentSupport = paymentSupport;
         this.authServiceFactory = authServiceFactory;
         this.transferRepository = transferRepository;
     }
@@ -45,8 +46,13 @@ public class TransferPaymentServiceImpl implements PaymentManagerService {
                 );
 
             if(paymentAuthService == null) {
-                paymentDTO.getPayment().setStatus(PaymentStatusEnum.FAILED);
-                paymentDTO.setResult(ResultEnum.INVALID_AUTHORIZER);
+                this.paymentSupport
+                        .updatePaymentDTO(
+                                paymentDTO,
+                                BusinessResultEnum.INVALID_AUTHORIZER
+                        );
+
+                this.paymentSupport.updatePayment(paymentDTO);
                 throw new FactoryException(
                         this.getClass().toString()
 

@@ -5,7 +5,7 @@ import com.linchi.payments.paymentsapi.dto.ExceptionDTO;
 import com.linchi.payments.paymentsapi.dto.response.PaymentResp;
 import com.linchi.payments.paymentsapi.excpetions.*;
 
-import com.linchi.payments.paymentsapi.service.support.enums.ResultEnum;
+import com.linchi.payments.paymentsapi.service.support.enums.InternalResultEnum;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConversionException;
@@ -21,7 +21,6 @@ public class ExceptionController {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Set<String> methodArgumentNotValidExceptionHandler(MethodArgumentNotValidException ex) {
-
         return  ex.getBindingResult()
                     .getFieldErrors()
                     .stream()
@@ -37,9 +36,15 @@ public class ExceptionController {
 
     @ExceptionHandler(HttpMessageConversionException.class)
     public ResponseEntity<ExceptionDTO> HttpMessageConversionExceptionHandler(HttpMessageConversionException ex) {
+
+        String message = ex.getMessage();
+        if(message.contains("[ASC, DESC]")){
+            message = "[ASC, DESC]";
+        }
+
         ExceptionDTO  exception = new ExceptionDTO();
-        exception.setCode(ResultEnum.DATA_CONVERT_ERROR.getCode());
-        exception.setMessage( ResultEnum.DATA_CONVERT_ERROR.getDescription() +": " + ex.getMessage());
+        exception.setCode(InternalResultEnum.DATA_CONVERT_ERROR.getCode());
+        exception.setMessage( InternalResultEnum.DATA_CONVERT_ERROR.getDescription() +": " + message);
 
         return new ResponseEntity<>(exception, HttpStatus.FORBIDDEN);
     }
@@ -53,9 +58,23 @@ public class ExceptionController {
         return new ResponseEntity<>(paymentResp, HttpStatus.OK);
     }
 
-    @ExceptionHandler(DuplicatePayException.class)
+    @ExceptionHandler(InvalidFindFieldException.class)
+    public ResponseEntity<ExceptionDTO> InvalidFindFieldExceptionHandler(InvalidFindFieldException e) {
 
-    public ResponseEntity<ExceptionDTO> DuplicatePayExceptionHandler(DuplicatePayException ex) {
+
+        ExceptionDTO exception =
+                ExceptionDTO.builder()
+                        .code(InternalResultEnum.INVALID_FIELDS.getCode())
+                        .message(
+                                InternalResultEnum.INVALID_FIELDS.getDescription()+
+                                        e.getMessage()
+                        )
+                        .build();
+        return new ResponseEntity<>(exception, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(InternalException.class)
+    public ResponseEntity<ExceptionDTO> InternalExceptionHandler(InternalException ex) {
         ExceptionDTO exception = new ExceptionDTO();
         exception.setCode(
                 ex.getResult().getCode()
@@ -76,31 +95,6 @@ public class ExceptionController {
                         .build();
         return new ResponseEntity<>(exception, HttpStatus.FORBIDDEN);
     }
-
-    @ExceptionHandler(PaymentsNotFoundException.class)
-    public ResponseEntity<ExceptionDTO> PaymentsNotFoundExceptionHandler(PaymentsNotFoundException ignored) {
-        ExceptionDTO exception =
-                ExceptionDTO.builder()
-                        .code(ResultEnum.PAYMENT_NOT_FOUND.getCode())
-                        .message(ResultEnum.PAYMENT_NOT_FOUND.getDescription())
-                        .build();
-        return new ResponseEntity<>(exception, HttpStatus.NOT_FOUND);
-    }
-
-
-    @ExceptionHandler(InvalidFindFieldException.class)
-    public ResponseEntity<ExceptionDTO> InvalidFindFieldExceptionHandler(InvalidFindFieldException e) {
-        ExceptionDTO exception =
-                ExceptionDTO.builder()
-                        .code(ResultEnum.INVALID_FIELDS.getCode())
-                        .message(
-                                ResultEnum.INVALID_FIELDS.getDescription()+
-                                e.getMessage()
-                        )
-                        .build();
-        return new ResponseEntity<>(exception, HttpStatus.NOT_FOUND);
-    }
-
 
 
 

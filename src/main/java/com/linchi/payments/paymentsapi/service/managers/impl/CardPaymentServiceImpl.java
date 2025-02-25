@@ -5,15 +5,15 @@ import com.linchi.payments.paymentsapi.dto.request.CardPaymentReq;
 import com.linchi.payments.paymentsapi.dto.request.PaymentReq;
 import com.linchi.payments.paymentsapi.entitys.CardPayment;
 import com.linchi.payments.paymentsapi.entitys.MethodBase;
-import com.linchi.payments.paymentsapi.entitys.enums.PaymentStatusEnum;
 import com.linchi.payments.paymentsapi.excpetions.FactoryException;
 import com.linchi.payments.paymentsapi.repository.CardRepository;
-import com.linchi.payments.paymentsapi.service.Authorizers.PaymentAuthService;
+import com.linchi.payments.paymentsapi.service.authorizers.PaymentAuthService;
 import com.linchi.payments.paymentsapi.service.managers.PaymentManagerService;
+import com.linchi.payments.paymentsapi.service.payments.PaymentSupport;
 import com.linchi.payments.paymentsapi.service.support.*;
 
 import com.linchi.payments.paymentsapi.service.support.enums.AuthsEnum;
-import com.linchi.payments.paymentsapi.service.support.enums.ResultEnum;
+import com.linchi.payments.paymentsapi.service.support.enums.BusinessResultEnum;
 import com.linchi.payments.paymentsapi.service.support.enums.ManagersEnum;
 import com.linchi.payments.paymentsapi.service.support.factorys.AuthServiceFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,18 +25,22 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class CardPaymentServiceImpl implements PaymentManagerService {
 
-
+    private final PaymentSupport paymentSupport;
     private final CardRepository cardRepository;
     private final AuthServiceFactory authServiceFactory;
 
+
     @Autowired
-    public CardPaymentServiceImpl(CardRepository cardRepository, AuthServiceFactory authServiceFactory) {
+    public CardPaymentServiceImpl(CardRepository cardRepository, AuthServiceFactory authServiceFactory, PaymentSupport paymentSupport) {
+        this.paymentSupport = paymentSupport;
         this.cardRepository = cardRepository;
         this.authServiceFactory = authServiceFactory;
     }
 
     @Override
     public void processPayment(PaymentDTO paymentDTO) throws FactoryException {
+
+
 
         CardPayment cardPayment = (CardPayment)paymentDTO.getMethod();
 
@@ -52,12 +56,15 @@ public class CardPaymentServiceImpl implements PaymentManagerService {
                         );
 
         if(paymentAuthService == null) {
-            paymentDTO.getPayment().setStatus(PaymentStatusEnum.FAILED);
-            paymentDTO.getPayment().setDescription(ResultEnum.INVALID_AUTHORIZER.getDescription());
-            paymentDTO.setResult(ResultEnum.INVALID_AUTHORIZER);
+            this.paymentSupport
+                    .updatePaymentDTO(
+                            paymentDTO,
+                            BusinessResultEnum.INVALID_AUTHORIZER
+                    );
+
+            this.paymentSupport.updatePayment(paymentDTO);
             throw new FactoryException(
                   this.getClass().toString()
-
             );
         }
 

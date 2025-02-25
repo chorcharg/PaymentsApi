@@ -1,28 +1,46 @@
-package com.linchi.payments.paymentsapi.service.Authorizers.impl;
+package com.linchi.payments.paymentsapi.service.authorizers.impl;
 
 import com.linchi.payments.paymentsapi.dto.PaymentDTO;
 import com.linchi.payments.paymentsapi.entitys.P2pPayment;
 import com.linchi.payments.paymentsapi.entitys.enums.PaymentStatusEnum;
 import com.linchi.payments.paymentsapi.excpetions.BusinessException;
-import com.linchi.payments.paymentsapi.service.Authorizers.PaymentAuthService;
+import com.linchi.payments.paymentsapi.service.authorizers.PaymentAuthService;
 
+import com.linchi.payments.paymentsapi.service.payments.PaymentSupport;
+import com.linchi.payments.paymentsapi.service.payments.impl.PaymentSupportImpl;
 import com.linchi.payments.paymentsapi.service.support.enums.AuthsEnum;
-import com.linchi.payments.paymentsapi.service.support.enums.ResultEnum;
+import com.linchi.payments.paymentsapi.service.support.enums.BusinessResultEnum;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class P2pAuthMeliServiceImpl implements PaymentAuthService {
 
+    PaymentSupport paymentSupport;
+
+    @Autowired
+    public P2pAuthMeliServiceImpl(PaymentSupport paymentSupport) {
+        this.paymentSupport = paymentSupport;
+    }
+
+
     @Override
     public void doPayment(PaymentDTO paymentDTO) {
+
+        PaymentSupportImpl paymentSupport;
+
 
         P2pPayment p2pPayment = (P2pPayment) paymentDTO.getMethod();
 
         if(p2pPayment.getSenderId()==123){
-            paymentDTO.getPayment().setStatus(PaymentStatusEnum.REJECTED);
-            paymentDTO.setResult(ResultEnum.INVALID_USER);
-            paymentDTO.getPayment().setDescription(ResultEnum.INVALID_USER.getDescription());
-            throw new BusinessException(ResultEnum.INVALID_USER);
+            this.paymentSupport
+                    .updatePaymentDTO(
+                            paymentDTO,
+                            BusinessResultEnum.INVALID_USER
+                    );
+
+            this.paymentSupport.updatePayment(paymentDTO);
+            throw new BusinessException(BusinessResultEnum.INVALID_USER);
         }
 
 /*        P2pPaymentReq p2pPaymentReq = (P2pPaymentReq)paymentReq;
@@ -44,7 +62,7 @@ public class P2pAuthMeliServiceImpl implements PaymentAuthService {
 
         //suponemos que llamamos y salio todo bien
         paymentDTO.getPayment().setStatus(PaymentStatusEnum.APPROVED);
-        paymentDTO.setResult(ResultEnum.OK);
+        paymentDTO.setResult(BusinessResultEnum.OK);
     }
 
     @Override
