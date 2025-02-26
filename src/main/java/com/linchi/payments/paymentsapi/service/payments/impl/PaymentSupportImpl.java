@@ -1,5 +1,22 @@
 package com.linchi.payments.paymentsapi.service.payments.impl;
 
+import java.lang.reflect.Field;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
+
+import jakarta.persistence.criteria.Predicate;
+import jakarta.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
+
 import com.linchi.payments.paymentsapi.dto.PaymentDTO;
 import com.linchi.payments.paymentsapi.dto.request.PaymentListReq;
 import com.linchi.payments.paymentsapi.dto.request.PaymentReq;
@@ -12,21 +29,6 @@ import com.linchi.payments.paymentsapi.service.payments.PaymentSupport;
 import com.linchi.payments.paymentsapi.service.support.Mappers;
 import com.linchi.payments.paymentsapi.service.support.enums.ManagersEnum;
 import com.linchi.payments.paymentsapi.service.support.enums.BusinessResultEnum;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.stereotype.Service;
-
-import java.lang.reflect.Field;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Stream;
 
 @Service
 public class PaymentSupportImpl implements PaymentSupport {
@@ -38,7 +40,6 @@ public class PaymentSupportImpl implements PaymentSupport {
         this.paymentRepository = paymentRepository;
     }
 
-
     @Transactional
     public void startPayment(PaymentDTO paymentDTO, PaymentManagerService payManager) {
         //se ocupa el servicio del metodo de pago, porque conoce el tipo y puede castearlo.
@@ -48,16 +49,19 @@ public class PaymentSupportImpl implements PaymentSupport {
     }
 
     public void updatePaymentDTO(PaymentDTO paymentDTO, BusinessResultEnum result) {
-        paymentDTO.getPayment().setStatus(result.getStatus());
-        paymentDTO.setResult(result);
-        paymentDTO.getPayment().setDescription(result.getDescription());
-
+        paymentDTO
+                .getPayment()
+                .setStatus(result.getStatus());
+        paymentDTO
+                .setResult(result);
+        paymentDTO
+                .getPayment()
+                .setDescription(result.getDescription());
     }
 
     public void updatePayment(PaymentDTO paymentDTO) {
         this.paymentRepository.save(paymentDTO.getPayment());
     }
-
 
     public PaymentDTO getPaymentDTO(PaymentReq paymentReq, ManagersEnum method) {
         PaymentDTO paymentDTO = new PaymentDTO();
@@ -87,6 +91,7 @@ public class PaymentSupportImpl implements PaymentSupport {
     ///busqueda
 
     public Pageable buildPageConfig(PaymentListReq paymentListReq) {
+
 
         //config de paginado con sort
         if (paymentListReq.getSortBy() != null) {
@@ -122,9 +127,7 @@ public class PaymentSupportImpl implements PaymentSupport {
         if (!validFields.contains(paymentListReq.getSortBy())) {
             throw new InvalidFindFieldException(validFields.toString());
         }
-
     }
-
 
     public Specification<Payment> buildSpecs(PaymentListReq paymentListReq) {
         return (root, query, criteriaBuilder) -> {
@@ -148,8 +151,9 @@ public class PaymentSupportImpl implements PaymentSupport {
                 predicates.add(criteriaBuilder.equal(root.get("method"), paymentListReq.getMethod()));
             }
 
+
+
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
     }
-
 }

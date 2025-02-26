@@ -8,7 +8,9 @@ public enum CurrencyEnum {
     ARS(1),
     EUR(1300.08),
     USD(1200.0),
-    UYP(300.07);
+    UYP(300.07)
+
+    ;
 
     private final double rate;
 

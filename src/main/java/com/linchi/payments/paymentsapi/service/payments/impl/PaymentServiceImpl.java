@@ -1,20 +1,8 @@
 package com.linchi.payments.paymentsapi.service.payments.impl;
-import com.linchi.payments.paymentsapi.dto.PaymentDTO;
-import com.linchi.payments.paymentsapi.dto.request.PaymentListReq;
-import com.linchi.payments.paymentsapi.dto.request.PaymentReq;
-import com.linchi.payments.paymentsapi.dto.request.PaymentStatusReq;
-import com.linchi.payments.paymentsapi.dto.response.PaymentListResp;
-import com.linchi.payments.paymentsapi.dto.response.PaymentResp;
-import com.linchi.payments.paymentsapi.entitys.Payment;
-import com.linchi.payments.paymentsapi.entitys.PaymentIntent;
-import com.linchi.payments.paymentsapi.excpetions.*;
-import com.linchi.payments.paymentsapi.repository.PaymentRepository;
-import com.linchi.payments.paymentsapi.service.managers.PaymentManagerService;
-import com.linchi.payments.paymentsapi.service.payments.PaymentService;
-import com.linchi.payments.paymentsapi.service.support.enums.CurrencyEnum;
-import com.linchi.payments.paymentsapi.service.support.enums.InternalResultEnum;
-import com.linchi.payments.paymentsapi.service.support.enums.ManagersEnum;
-import com.linchi.payments.paymentsapi.service.support.factorys.ManagerFactory;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,9 +12,22 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
+import com.linchi.payments.paymentsapi.dto.PaymentDTO;
+import com.linchi.payments.paymentsapi.dto.request.PaymentListReq;
+import com.linchi.payments.paymentsapi.dto.request.PaymentReq;
+import com.linchi.payments.paymentsapi.dto.request.PaymentStatusReq;
+import com.linchi.payments.paymentsapi.dto.response.PaymentListResp;
+import com.linchi.payments.paymentsapi.dto.response.PaymentResp;
+import com.linchi.payments.paymentsapi.entitys.Payment;
+import com.linchi.payments.paymentsapi.entitys.PaymentIntent;
+import com.linchi.payments.paymentsapi.repository.PaymentRepository;
+import com.linchi.payments.paymentsapi.service.managers.PaymentManagerService;
+import com.linchi.payments.paymentsapi.service.payments.PaymentService;
+import com.linchi.payments.paymentsapi.service.support.enums.CurrencyEnum;
+import com.linchi.payments.paymentsapi.service.support.enums.InternalResultEnum;
+import com.linchi.payments.paymentsapi.service.support.enums.ManagersEnum;
+import com.linchi.payments.paymentsapi.service.support.factorys.ManagerFactory;
+import com.linchi.payments.paymentsapi.excpetions.InternalException;
 
 
 @Service
@@ -36,13 +37,11 @@ public class PaymentServiceImpl implements PaymentService {
     private final PaymentRepository paymentRepository;
     private final ManagerFactory managerFactory;
 
-
     @Autowired
     public PaymentServiceImpl(PaymentRepository paymentRepository, ManagerFactory managerFactory, PaymentSupportImpl paymentSupport) {
         this.paymentRepository = paymentRepository;
         this.managerFactory = managerFactory;
         this.paymentSupport = paymentSupport;
-
     }
 
     /// Servicio para pagos y metodos de apoyo
@@ -53,7 +52,6 @@ public class PaymentServiceImpl implements PaymentService {
         // elegimos el manager de pago
         //si falla lanza excepcion, no sigue
         PaymentManagerService payManager = managerFactory.getPaymentMethod(manager);
-
 
         //Generamos el DTO de pago, cargamos entidad payment y paymentMethodX
         //si no se puede, no seguimos.
@@ -73,7 +71,10 @@ public class PaymentServiceImpl implements PaymentService {
         //si ya existe la intencion de pago, cortamos
         if (
                 paymentRepository
-                        .findOneByPaymentIntent(paymentDTO.getPayment().getPaymentIntent())
+                        .findOneByPaymentIntent(
+                                paymentDTO
+                                        .getPayment()
+                                        .getPaymentIntent())
                         .isPresent()
         ) {
             throw new InternalException(InternalResultEnum.PAYMENT_EXISTS);
@@ -86,7 +87,6 @@ public class PaymentServiceImpl implements PaymentService {
         //enviamos al payManager para seguir su proceso
          try{
             payManager.processPayment(paymentDTO);
-
         } catch (Exception ignored) {
 
         }
@@ -94,7 +94,6 @@ public class PaymentServiceImpl implements PaymentService {
         this.paymentRepository.save(
                 paymentDTO.getPayment()
         );
-
 
         //respondemos
         ResponseEntity<PaymentResp> response;
@@ -129,7 +128,6 @@ public class PaymentServiceImpl implements PaymentService {
                 )
                 .orElseThrow( () -> new InternalException(InternalResultEnum.PAYMENT_NOT_FOUND));
 
-
         return new ResponseEntity<>(payment, HttpStatus.OK);
     }
 
@@ -137,7 +135,9 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public List<String> getCurrency() {
         return Arrays.stream(CurrencyEnum.values())
-                .map(currencyEnum -> currencyEnum.name() + ": " + currencyEnum.getRate())
+                .map(
+                        currencyEnum -> currencyEnum.name() + ": " + currencyEnum.getRate()
+                )
                 .collect(Collectors.toList());
     }
 
@@ -153,7 +153,6 @@ public class PaymentServiceImpl implements PaymentService {
                 .page(paymentListReq.getPage())
                 .size(paymentListReq.getSize())
                 .build();
-
 
     }
 

@@ -1,22 +1,22 @@
 package com.linchi.payments.paymentsapi.service.authorizers.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.linchi.payments.paymentsapi.dto.PaymentDTO;
 import com.linchi.payments.paymentsapi.entitys.P2pPayment;
 import com.linchi.payments.paymentsapi.entitys.enums.PaymentStatusEnum;
 import com.linchi.payments.paymentsapi.excpetions.BusinessException;
 import com.linchi.payments.paymentsapi.service.authorizers.PaymentAuthService;
-
 import com.linchi.payments.paymentsapi.service.payments.PaymentSupport;
-import com.linchi.payments.paymentsapi.service.payments.impl.PaymentSupportImpl;
 import com.linchi.payments.paymentsapi.service.support.enums.AuthsEnum;
 import com.linchi.payments.paymentsapi.service.support.enums.BusinessResultEnum;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+
 
 @Service
 public class P2pAuthMeliServiceImpl implements PaymentAuthService {
 
-    PaymentSupport paymentSupport;
+    private final PaymentSupport paymentSupport;
 
     @Autowired
     public P2pAuthMeliServiceImpl(PaymentSupport paymentSupport) {
@@ -26,9 +26,6 @@ public class P2pAuthMeliServiceImpl implements PaymentAuthService {
 
     @Override
     public void doPayment(PaymentDTO paymentDTO) {
-
-        PaymentSupportImpl paymentSupport;
-
 
         P2pPayment p2pPayment = (P2pPayment) paymentDTO.getMethod();
 
@@ -61,7 +58,9 @@ public class P2pAuthMeliServiceImpl implements PaymentAuthService {
         */
 
         //suponemos que llamamos y salio todo bien
-        paymentDTO.getPayment().setStatus(PaymentStatusEnum.APPROVED);
+        paymentDTO
+                .getPayment()
+                .setStatus(PaymentStatusEnum.APPROVED);
         paymentDTO.setResult(BusinessResultEnum.OK);
     }
 

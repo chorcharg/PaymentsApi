@@ -1,11 +1,11 @@
 package com.linchi.payments.paymentsapi.service.support.enums;
 
-import com.linchi.payments.paymentsapi.entitys.enums.PaymentStatusEnum;
 import lombok.Getter;
+
+import com.linchi.payments.paymentsapi.entitys.enums.PaymentStatusEnum;
 
 @Getter
 public enum BusinessResultEnum {
-
 
     OK("000","Operacion exitosa", PaymentStatusEnum.APPROVED ),
 
@@ -19,19 +19,14 @@ public enum BusinessResultEnum {
 
     ;
 
-
     private final String code;
     private final String description;
     private final PaymentStatusEnum status;
-
 
     BusinessResultEnum(String code, String description, PaymentStatusEnum status) {
         this.code = code;
         this.description = description;
         this.status = status;
-
     }
-
-
 
 }

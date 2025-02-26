@@ -1,8 +1,8 @@
 package com.linchi.payments.paymentsapi.service.support.enums;
 
-import lombok.Getter;
-
 import java.util.Arrays;
+
+import lombok.Getter;
 
 @Getter
 public enum AuthsEnum {
@@ -11,14 +11,15 @@ public enum AuthsEnum {
     LINCHI ("linchi"),
     P2P("P2P"),
     TRANSFER("transfer"),
-    NOT_FOUND("not_found");
+    NOT_FOUND("not_found")
+
+    ;
 
     private final String name;
 
     AuthsEnum(String name){
         this.name = name;
     }
-
 
     public static AuthsEnum fromName(String name) {
         return Arrays.stream(AuthsEnum.values())

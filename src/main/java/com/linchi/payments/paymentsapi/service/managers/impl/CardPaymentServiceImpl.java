@@ -1,5 +1,10 @@
 package com.linchi.payments.paymentsapi.service.managers.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.linchi.payments.paymentsapi.dto.PaymentDTO;
 import com.linchi.payments.paymentsapi.dto.request.CardPaymentReq;
 import com.linchi.payments.paymentsapi.dto.request.PaymentReq;
@@ -11,15 +16,11 @@ import com.linchi.payments.paymentsapi.service.authorizers.PaymentAuthService;
 import com.linchi.payments.paymentsapi.service.managers.PaymentManagerService;
 import com.linchi.payments.paymentsapi.service.payments.PaymentSupport;
 import com.linchi.payments.paymentsapi.service.support.*;
-
 import com.linchi.payments.paymentsapi.service.support.enums.AuthsEnum;
 import com.linchi.payments.paymentsapi.service.support.enums.BusinessResultEnum;
 import com.linchi.payments.paymentsapi.service.support.enums.ManagersEnum;
 import com.linchi.payments.paymentsapi.service.support.factorys.AuthServiceFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
+
 
 
 @Service
@@ -28,7 +29,6 @@ public class CardPaymentServiceImpl implements PaymentManagerService {
     private final PaymentSupport paymentSupport;
     private final CardRepository cardRepository;
     private final AuthServiceFactory authServiceFactory;
-
 
     @Autowired
     public CardPaymentServiceImpl(CardRepository cardRepository, AuthServiceFactory authServiceFactory, PaymentSupport paymentSupport) {
@@ -39,8 +39,6 @@ public class CardPaymentServiceImpl implements PaymentManagerService {
 
     @Override
     public void processPayment(PaymentDTO paymentDTO) throws FactoryException {
-
-
 
         CardPayment cardPayment = (CardPayment)paymentDTO.getMethod();
 

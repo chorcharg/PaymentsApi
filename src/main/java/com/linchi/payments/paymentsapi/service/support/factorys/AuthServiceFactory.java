@@ -1,13 +1,13 @@
 package com.linchi.payments.paymentsapi.service.support.factorys;
 
+import java.util.List;
 
-import com.linchi.payments.paymentsapi.service.authorizers.PaymentAuthService;
-
-import com.linchi.payments.paymentsapi.service.support.enums.AuthsEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
+import com.linchi.payments.paymentsapi.service.authorizers.PaymentAuthService;
+import com.linchi.payments.paymentsapi.service.support.enums.AuthsEnum;
+
 
 @Component
 public class AuthServiceFactory {
@@ -17,13 +17,10 @@ public class AuthServiceFactory {
 
     @Autowired
     public AuthServiceFactory(List<PaymentAuthService> paymentAuthService) {
-
         this.paymentAuthService = paymentAuthService;
     }
 
     public PaymentAuthService getPaymentAuthService(AuthsEnum provider) {
-
-
         return paymentAuthService
                 .stream()
                 .filter(

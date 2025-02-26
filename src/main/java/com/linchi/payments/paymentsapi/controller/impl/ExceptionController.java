@@ -1,19 +1,23 @@
 package com.linchi.payments.paymentsapi.controller.impl;
 
-import com.linchi.payments.paymentsapi.dto.ExceptionDTO;
+import java.util.*;
+import java.util.stream.Collectors;
 
-import com.linchi.payments.paymentsapi.dto.response.PaymentResp;
-import com.linchi.payments.paymentsapi.excpetions.*;
-
-import com.linchi.payments.paymentsapi.service.support.enums.InternalResultEnum;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConversionException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import com.linchi.payments.paymentsapi.excpetions.BusinessException;
+import com.linchi.payments.paymentsapi.excpetions.InternalException;
+import com.linchi.payments.paymentsapi.excpetions.InvalidFindFieldException;
+import com.linchi.payments.paymentsapi.excpetions.FactoryException;
+import com.linchi.payments.paymentsapi.dto.ExceptionDTO;
+import com.linchi.payments.paymentsapi.dto.response.PaymentResp;
+
+import com.linchi.payments.paymentsapi.service.support.enums.InternalResultEnum;
+
 
 @RestControllerAdvice
 public class ExceptionController {
@@ -53,14 +57,15 @@ public class ExceptionController {
     public ResponseEntity<PaymentResp> BussinesExceptionHandler(BusinessException ex) {
         PaymentResp paymentResp  = new PaymentResp();
         paymentResp.setResult(ex.getResult());
-        paymentResp.setResultDescription(ex.getResult().getDescription());
+        paymentResp.setResultDescription(
+                ex.getResult().getDescription()
+        );
 
         return new ResponseEntity<>(paymentResp, HttpStatus.OK);
     }
 
     @ExceptionHandler(InvalidFindFieldException.class)
     public ResponseEntity<ExceptionDTO> InvalidFindFieldExceptionHandler(InvalidFindFieldException e) {
-
 
         ExceptionDTO exception =
                 ExceptionDTO.builder()
@@ -95,7 +100,5 @@ public class ExceptionController {
                         .build();
         return new ResponseEntity<>(exception, HttpStatus.FORBIDDEN);
     }
-
-
 
 }

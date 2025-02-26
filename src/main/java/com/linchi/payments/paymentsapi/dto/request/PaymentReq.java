@@ -1,13 +1,13 @@
 package com.linchi.payments.paymentsapi.dto.request;
 
-import com.linchi.payments.paymentsapi.service.support.enums.CurrencyEnum;
-
 import jakarta.validation.constraints.*;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import com.linchi.payments.paymentsapi.service.support.enums.CurrencyEnum;
 
 @Data
 @AllArgsConstructor
@@ -29,7 +29,6 @@ public class PaymentReq {
 
     @NotNull
     private CurrencyEnum currency;
-
 
 }
 

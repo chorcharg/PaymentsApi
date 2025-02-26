@@ -1,18 +1,16 @@
 package com.linchi.payments.paymentsapi.service.support.factorys;
 
+import java.util.List;
 
-import com.linchi.payments.paymentsapi.excpetions.FactoryException;
-import com.linchi.payments.paymentsapi.service.managers.PaymentManagerService;
-
-import com.linchi.payments.paymentsapi.service.support.enums.ManagersEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
+import com.linchi.payments.paymentsapi.excpetions.FactoryException;
+import com.linchi.payments.paymentsapi.service.managers.PaymentManagerService;
+import com.linchi.payments.paymentsapi.service.support.enums.ManagersEnum;
 
 @Component
 public class ManagerFactory {
-
 
     private final List<PaymentManagerService> paymentManagerService;
 
@@ -23,7 +21,6 @@ public class ManagerFactory {
     }
 
     public PaymentManagerService getPaymentMethod(ManagersEnum manager) {
-
         return paymentManagerService
                 .stream()
                 .filter(

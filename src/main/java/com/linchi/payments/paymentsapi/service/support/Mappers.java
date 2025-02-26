@@ -70,6 +70,5 @@ public final class Mappers {
         return transferPayment;
     }
 
-
 }
 

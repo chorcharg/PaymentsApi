@@ -1,8 +1,6 @@
 package com.linchi.payments.paymentsapi.entitys;
 
-
 import jakarta.persistence.Entity;
-
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,10 +14,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class CardPayment extends MethodBase{
 
-
     private String authorizer;
-
     private String cardNumber;
-
 
 }

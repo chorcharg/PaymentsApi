@@ -1,5 +1,7 @@
 package com.linchi.payments.paymentsapi.service.payments;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 import com.linchi.payments.paymentsapi.dto.PaymentDTO;
 import com.linchi.payments.paymentsapi.dto.request.PaymentListReq;
@@ -8,8 +10,6 @@ import com.linchi.payments.paymentsapi.entitys.Payment;
 import com.linchi.payments.paymentsapi.service.managers.PaymentManagerService;
 import com.linchi.payments.paymentsapi.service.support.enums.BusinessResultEnum;
 import com.linchi.payments.paymentsapi.service.support.enums.ManagersEnum;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 
 public interface PaymentSupport {
 
